@@ -130,30 +130,6 @@
     </div>
 
     <button class="btn" onclick="iniciarSesion()">ENTRAR AL BOX</button>
-    <div style="margin-top: 20px;">
-      <span class="link" onclick="cambiarVista('vistaRegistro')">¿Nuevo atleta? Regístrate aquí</span>
-    </div>
-  </div>
-
-  <!-- REGISTRO -->
-  <div class="view-container" id="vistaRegistro" style="padding-top: 10vh;">
-    <h1 class="title-brand" style="font-size: 28px;">NUEVO ATLETA</h1>
-    <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 13px;">Únete a la comunidad Elementa Box.</p>
-    
-    <div class="input-group"><label>NOMBRE COMPLETO</label><input type="text" id="regNombre" placeholder="Tus nombres y apellidos"></div>
-    <div class="input-group"><label>DOCUMENTO DE IDENTIDAD</label><input type="text" id="regCedula" placeholder="Número de documento"></div>
-    <div class="input-group"><label>CORREO ELECTRÓNICO</label><input type="email" id="regCorreo" placeholder="ejemplo@correo.com"></div>
-    <div class="input-group" style="display:none;"><input type="text" id="regCargo" value="ATLETA"></div>
-    <div class="input-group"><label>NIVEL DE EXPERIENCIA</label>
-      <select id="regProyecto">
-        <option value="PRINCIPIANTE">Principiante (Scaled)</option>
-        <option value="INTERMEDIO">Intermedio (Rx)</option>
-        <option value="AVANZADO">Avanzado (Elite)</option>
-      </select>
-    </div>
-
-    <button class="btn" onclick="registrarUsuario()">ENVIAR SOLICITUD</button>
-    <button class="btn btn-outline" onclick="cambiarVista('vistaLogin')">VOLVER</button>
   </div>
 
   <!-- DASHBOARD PRINCIPAL -->
@@ -236,9 +212,9 @@
     };
 
     let usuarioActual = {};
-    let backendLeaderboard = []; // Aquí guardaremos la tabla real que manda Sheets
+    let backendLeaderboard = []; 
 
-    // COMUNICACIÓN CON SHEETS
+    // COMUNICACIÓN BLINDADA CONTRA ERRORES
     async function peticionBackend(payload) {
         try {
             const response = await fetch(URL_APPS_SCRIPT, { 
@@ -250,10 +226,10 @@
             try {
                 return JSON.parse(text);
             } catch (err) {
-                return { estado: "error", mensaje: "Asegúrate de haber hecho una NUEVA IMPLEMENTACIÓN." };
+                return { estado: "error", mensaje: "Google bloqueó la conexión. ¿Aseguraste poner 'Cualquier persona' en la nueva implementación?" };
             }
         } catch (error) {
-            return { estado: "error", mensaje: "Error de red." };
+            return { estado: "error", mensaje: "Error de red. Asegúrate de NO abrir el archivo dando doble clic desde el escritorio, ábrelo desde GitHub Pages." };
         }
     }
 
@@ -264,15 +240,16 @@
         if (result.estado === 'exito') {
             backendLeaderboard = result.leaderboard || [];
             
-            // --- NUEVO: Llenar la lista desplegable de usuarios ---
+            // Protección contra errores nulos (innerHTML)
             const datalist = document.getElementById('listaNombres');
-            datalist.innerHTML = '';
-            backendLeaderboard.forEach(user => {
-                let option = document.createElement('option');
-                option.value = user.nombre;
-                datalist.appendChild(option);
-            });
-            // -------------------------------------------------------
+            if(datalist) {
+                datalist.innerHTML = '';
+                backendLeaderboard.forEach(user => {
+                    let option = document.createElement('option');
+                    option.value = user.nombre;
+                    datalist.appendChild(option);
+                });
+            }
 
             ocultarLoader();
             cambiarVista('vistaLogin');
@@ -293,17 +270,23 @@
       
       if(res.estado === 'exito') {
         usuarioActual = res;
-        document.getElementById('dashNombre').innerText = res.nombre;
+        
+        const nombreObj = document.getElementById('dashNombre');
+        if(nombreObj) nombreObj.innerText = res.nombre;
         
         const badge = document.getElementById('badgeModulo');
-        badge.style.display = 'block';
-        badge.innerText = (res.cargo && res.cargo.includes('COACH')) ? '🛡️ COACH' : '🏋️ ELEMENTA';
-        badge.style.background = (res.cargo && res.cargo.includes('COACH')) ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 'linear-gradient(135deg, #ff4500, #cc3700)';
+        if(badge) {
+            badge.style.display = 'block';
+            badge.innerText = '🏋️ ELEMENTA';
+            badge.style.background = 'linear-gradient(135deg, #ff4500, #cc3700)';
+        }
         
-        // Puntos REALES desde Excel
-        document.getElementById('dashPuntos').innerText = `🏆 ${res.puntos}`;
+        const puntosObj = document.getElementById('dashPuntos');
+        if(puntosObj) puntosObj.innerText = `🏆 ${res.puntos}`;
 
-        document.getElementById('loginPassword').value = ''; 
+        const passObj = document.getElementById('loginPassword');
+        if(passObj) passObj.value = ''; 
+        
         ocultarLoader();
         cambiarVista('vistaDashboard');
       } else {
@@ -312,47 +295,37 @@
       }
     }
 
-    async function registrarUsuario() {
-        const cedula = document.getElementById('regCedula').value.trim();
-        const nombre = document.getElementById('regNombre').value.trim().toUpperCase();
-        const correo = document.getElementById('regCorreo').value.trim().toLowerCase();
-        const cargo = document.getElementById('regCargo').value; 
-        const proyecto = document.getElementById('regProyecto').value; 
-        
-        if(!cedula || !nombre) return alert("Documento y Nombre son obligatorios.");
-
-        mostrarLoader("Registrando...");
-        const res = await peticionBackend({ action: 'register', cedula, nombre, correo, cargo, proyecto });
-        
-        ocultarLoader();
-        if(res.estado === 'exito') {
-            alert("¡Solicitud enviada! El sistema administrativo la aprobará pronto.");
-            cambiarVista('vistaLogin');
-        } else {
-            alert("❌ " + res.mensaje);
-        }
-    }
-
     function prepararRutina() {
         const selectCat = document.getElementById('appCategoria');
-        selectCat.innerHTML = '<option value="">Seleccione Categoría...</option>';
-        Object.keys(GYM_DATA).forEach(cat => {
-            selectCat.innerHTML += `<option value="${cat}">${cat}</option>`;
-        });
-        document.getElementById('appMovimiento').innerHTML = '<option value="">Seleccione...</option>';
-        document.getElementById('appResultado').value = '';
-        document.getElementById('appObservaciones').value = '';
+        if(selectCat) {
+            selectCat.innerHTML = '<option value="">Seleccione Categoría...</option>';
+            Object.keys(GYM_DATA).forEach(cat => {
+                selectCat.innerHTML += `<option value="${cat}">${cat}</option>`;
+            });
+        }
+        
+        const selectMov = document.getElementById('appMovimiento');
+        if(selectMov) selectMov.innerHTML = '<option value="">Seleccione...</option>';
+        
+        const resObj = document.getElementById('appResultado');
+        if(resObj) resObj.value = '';
+        
+        const obsObj = document.getElementById('appObservaciones');
+        if(obsObj) obsObj.value = '';
+        
         cambiarVista('vistaRutina');
     }
 
     function actualizarMovimientos() {
         const cat = document.getElementById('appCategoria').value;
         const selectMov = document.getElementById('appMovimiento');
-        selectMov.innerHTML = '<option value="">Seleccione Movimiento...</option>';
-        if(GYM_DATA[cat]) {
-            GYM_DATA[cat].forEach(mov => {
-                selectMov.innerHTML += `<option value="${mov}">${mov}</option>`;
-            });
+        if(selectMov) {
+            selectMov.innerHTML = '<option value="">Seleccione Movimiento...</option>';
+            if(GYM_DATA[cat]) {
+                GYM_DATA[cat].forEach(mov => {
+                    selectMov.innerHTML += `<option value="${mov}">${mov}</option>`;
+                });
+            }
         }
     }
 
@@ -375,7 +348,8 @@
         
         if (resEnvio.estado === 'exito') {
             usuarioActual.puntos = resEnvio.nuevosPuntos;
-            document.getElementById('dashPuntos').innerText = `🏆 ${usuarioActual.puntos}`;
+            const puntosObj = document.getElementById('dashPuntos');
+            if(puntosObj) puntosObj.innerText = `🏆 ${usuarioActual.puntos}`;
 
             let wsText = `*--- NUEVO PR | ELEMENTA BOX ---*\n`;
             wsText += `*Atleta:* ${usuarioActual.nombre}\n`;
@@ -399,7 +373,6 @@
             `;
             document.body.appendChild(divExito);
             
-            // Actualizar leaderboard localmente para este usuario
             let userInLb = backendLeaderboard.find(u => u.nombre === usuarioActual.nombre);
             if (userInLb) userInLb.puntos = usuarioActual.puntos;
 
@@ -411,9 +384,9 @@
 
     function mostrarLeaderboard() {
         const lista = document.getElementById('listaLeaderboard');
+        if(!lista) return;
+
         lista.innerHTML = "";
-        
-        // Ordenar del mayor al menor usando los datos leídos del Excel
         let competidores = [...backendLeaderboard].sort((a,b) => b.puntos - a.puntos);
 
         if (competidores.length === 0) {
@@ -451,25 +424,34 @@
 
     function cambiarVista(idVista) {
       document.querySelectorAll('.view-container').forEach(c => c.classList.remove('active'));
-      document.getElementById(idVista).classList.add('active');
+      const view = document.getElementById(idVista);
+      if(view) view.classList.add('active');
     }
 
     function mostrarLoader(msg) {
-        document.getElementById('loaderMsg').innerText = msg;
-        document.getElementById('vistaLoader').style.display = 'block';
-        document.getElementById('vistaLoader').style.position = 'fixed';
-        document.getElementById('vistaLoader').style.top = '0';
-        document.getElementById('vistaLoader').style.left = '0';
-        document.getElementById('vistaLoader').style.height = '100vh';
-        document.getElementById('vistaLoader').style.zIndex = '999';
-        document.getElementById('vistaLoader').style.backgroundColor = 'rgba(0,0,0,0.9)';
+        const msgObj = document.getElementById('loaderMsg');
+        if(msgObj) msgObj.innerText = msg;
+        
+        const loader = document.getElementById('vistaLoader');
+        if(loader) {
+            loader.style.display = 'block';
+            loader.style.position = 'fixed';
+            loader.style.top = '0';
+            loader.style.left = '0';
+            loader.style.height = '100vh';
+            loader.style.zIndex = '999';
+            loader.style.backgroundColor = 'rgba(0,0,0,0.9)';
+        }
     }
 
     function ocultarLoader() {
-        document.getElementById('vistaLoader').style.display = 'none';
-        document.getElementById('vistaLoader').style.position = 'relative';
-        document.getElementById('vistaLoader').style.height = 'auto';
-        document.getElementById('vistaLoader').style.backgroundColor = 'transparent';
+        const loader = document.getElementById('vistaLoader');
+        if(loader) {
+            loader.style.display = 'none';
+            loader.style.position = 'relative';
+            loader.style.height = 'auto';
+            loader.style.backgroundColor = 'transparent';
+        }
     }
   </script>
 </body>
