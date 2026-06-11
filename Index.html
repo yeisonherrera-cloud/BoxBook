@@ -121,7 +121,8 @@
     
     <div class="input-group">
       <label>ATLETA (NOMBRE REGISTRADO)</label>
-      <input type="text" id="loginNombre" placeholder="Buscar nombre..." autocomplete="off">
+      <input type="text" list="listaNombres" id="loginNombre" placeholder="Buscar nombre..." autocomplete="off">
+      <datalist id="listaNombres"></datalist>
     </div>
     <div class="input-group">
       <label>CONTRASEÑA</label>
@@ -262,6 +263,17 @@
         
         if (result.estado === 'exito') {
             backendLeaderboard = result.leaderboard || [];
+            
+            // --- NUEVO: Llenar la lista desplegable de usuarios ---
+            const datalist = document.getElementById('listaNombres');
+            datalist.innerHTML = '';
+            backendLeaderboard.forEach(user => {
+                let option = document.createElement('option');
+                option.value = user.nombre;
+                datalist.appendChild(option);
+            });
+            // -------------------------------------------------------
+
             ocultarLoader();
             cambiarVista('vistaLogin');
         } else {
