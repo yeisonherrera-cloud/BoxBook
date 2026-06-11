@@ -7,14 +7,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root { 
-      --primary: #ff4500; /* Naranja Elementa */
+      --primary: #ff4500; 
       --primary-dark: #cc3700;
       --secondary: #1e1e1e; 
       --bg-dark: #0a0a0a; 
       --text-main: #ffffff;
       --text-muted: #9ca3af;
       --card-bg: rgba(30, 30, 30, 0.85);
-      --success: #10b981;
       --gold: #fbbf24;
     }
     
@@ -31,11 +30,8 @@
       display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
     }
 
-    /* Animaciones */
     @keyframes fadeSlideUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
-    @keyframes pulseGlow { 0% { box-shadow: 0 0 10px rgba(255,69,0,0.2); } 100% { box-shadow: 0 0 25px rgba(255,69,0,0.6); } }
 
-    /* Contenedor Principal (Cards) */
     .view-container { 
       width: 100%; max-width: 450px; 
       padding: 20px; box-sizing: border-box; 
@@ -45,11 +41,9 @@
     }
     .view-container.active { display: block; }
 
-    /* Tipografía Box */
     h1, h2, h3 { font-family: 'Montserrat', sans-serif; font-weight: 900; text-transform: uppercase; margin-top: 0; letter-spacing: -0.5px;}
     .title-brand { font-size: 32px; font-style: italic; color: var(--text-main); text-shadow: 2px 2px 0px var(--primary); margin-bottom: 5px;}
     
-    /* Inputs y Formularios */
     .input-group { margin-bottom: 16px; text-align: left; }
     label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px;}
     input, select, textarea { 
@@ -61,7 +55,6 @@
     }
     input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); background: rgba(0, 0, 0, 0.8); }
     
-    /* Botones */
     .btn { 
       width: 100%; padding: 16px; margin-top: 10px;
       background: var(--primary); color: white; 
@@ -71,27 +64,15 @@
     }
     .btn:active { transform: scale(0.98); }
     .btn-outline { background: transparent; border: 2px solid rgba(255,255,255,0.2); box-shadow: none; }
-    .btn-media { background: var(--secondary); border: 1px solid rgba(255,255,255,0.1); margin-top: 0; display: flex; align-items: center; justify-content: center; gap: 8px;}
-    .btn-media:hover { border-color: var(--primary); }
 
-    /* Dashboard & Gamificación */
     .dashboard-header { background: var(--card-bg); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); text-align: left; position: relative;}
     .user-greeting { font-size: 14px; color: var(--text-muted); }
     .user-name { font-size: 22px; font-family: 'Montserrat'; font-weight: 800; margin: 4px 0 15px 0;}
     
-    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .stat-box { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.05);}
-    .stat-value { font-size: 24px; font-weight: 900; font-family: 'Montserrat'; color: var(--primary); display: flex; align-items: center; justify-content: center; gap: 5px;}
-    .stat-value.gold { color: var(--gold); }
+    .stat-value { font-size: 28px; font-weight: 900; font-family: 'Montserrat'; color: var(--gold); display: flex; align-items: center; justify-content: center; gap: 5px;}
     .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; display: block;}
 
-    /* Mini Video Player */
-    .video-container { width: 100%; height: 180px; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 20px; position: relative; border: 1px solid rgba(255,255,255,0.1); display: none;}
-    .video-container video, .video-container img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8;}
-    .video-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); text-align: left; box-sizing: border-box;}
-    .video-title { font-family: 'Montserrat'; font-weight: 800; font-size: 16px; color: white; display: flex; align-items: center; gap: 6px;}
-
-    /* Leaderboard */
     .leaderboard-list { background: var(--card-bg); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);}
     .leaderboard-item { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
     .leaderboard-item:last-child { border-bottom: none; }
@@ -102,22 +83,14 @@
     .lb-user { flex: 1; text-align: left; padding-left: 10px; font-weight: 700; font-size: 15px;}
     .lb-points { font-weight: 900; font-family: 'Montserrat'; color: var(--primary); }
 
-    /* Nav inferior rápida */
     .quick-nav { display: flex; gap: 10px; margin-top: 20px;}
     .quick-nav .btn { font-size: 13px; padding: 12px; }
 
-    /* Utilidades */
     .link { color: var(--primary); cursor: pointer; text-decoration: underline; font-size: 13px;}
-    input[type="file"] { display: none !important; }
-    .queue-container { margin-top: 20px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; text-align: left; border: 1px dashed rgba(255,255,255,0.2);}
-    .queue-item { font-size: 13px; color: var(--text-muted); margin-bottom: 5px; display: flex; justify-content: space-between;}
-    .btn-remove { background: none; border: none; color: var(--primary); cursor: pointer; font-weight: bold; }
 
-    /* Loader */
     .loader-box { width: 60px; height: 60px; border: 5px solid rgba(255,69,0,0.2); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;}
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Animación Puntos */
     .points-animation {
       position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5);
       font-family: 'Montserrat'; font-size: 48px; font-weight: 900; color: var(--gold);
@@ -128,19 +101,7 @@
     @keyframes popPoints { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); } 20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); } 80% { opacity: 1; transform: translate(-50%, -80%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -100%) scale(0.8); } }
 
     .modulo-badge {
-        position: absolute; 
-        top: 20px; 
-        right: 20px; 
-        color: white; 
-        padding: 6px 12px; 
-        border-radius: 12px; 
-        font-size: 11px; 
-        font-weight: 800; 
-        letter-spacing: 1px; 
-        box-shadow: 0 4px 15px rgba(0,0,0,0.4); 
-        border: 1px solid rgba(255,255,255,0.2); 
-        z-index: 100; 
-        display: none;
+        position: absolute; top: 20px; right: 20px; color: white; padding: 6px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.2); z-index: 100; display: none;
     }
   </style>
 </head>
@@ -150,7 +111,7 @@
   <div class="view-container active" id="vistaLoader" style="padding-top: 40vh;">
     <div class="loader-box"></div>
     <h2 class="title-brand" style="font-size: 24px;">ELEMENTA BOX</h2>
-    <div id="loaderMsg" style="color: var(--text-muted); font-size: 14px; margin-top: 10px; font-family: 'JetBrains Mono', monospace;">Conectando al Box...</div>
+    <div id="loaderMsg" style="color: var(--text-muted); font-size: 14px; margin-top: 10px;">Conectando...</div>
   </div>
 
   <!-- LOGIN -->
@@ -201,19 +162,13 @@
       <div class="user-greeting">Hola, atleta</div>
       <div class="user-name" id="dashNombre">NOMBRE ATLETA</div>
       
-      <div class="stats-grid">
-        <div class="stat-box">
-          <div class="stat-value" id="dashRacha">🔥 0</div>
-          <div class="stat-label">Días de Racha</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-value gold" id="dashPuntos">🏆 0</div>
-          <div class="stat-label">Puntos Totales</div>
-        </div>
+      <div class="stat-box">
+        <div class="stat-value" id="dashPuntos">🏆 0</div>
+        <div class="stat-label">PUNTOS ACUMULADOS EN EL BOX</div>
       </div>
     </div>
 
-    <button class="btn" onclick="prepararRutina()" style="padding: 20px; font-size: 18px; margin-bottom: 15px;">🏋️ REGISTRAR MARCA (PR)</button>
+    <button class="btn" onclick="prepararRutina()" style="padding: 20px; font-size: 18px; margin-bottom: 15px;">🏋️ REGISTRAR PR</button>
     
     <div class="quick-nav">
       <button class="btn btn-outline" onclick="mostrarLeaderboard()" style="flex:1;">🏆 LEADERBOARD</button>
@@ -224,7 +179,7 @@
   <!-- RUTINA / REGISTRO DE MARCA -->
   <div class="view-container" id="vistaRutina">
     <h2 style="text-align: left; font-size: 20px; margin-bottom: 5px;">REGISTRO DE MARCA</h2>
-    <p style="text-align: left; color: var(--text-muted); font-size: 13px; margin-bottom: 20px; margin-top:0;">Guarda tu progreso y gana puntos.</p>
+    <p style="text-align: left; color: var(--text-muted); font-size: 13px; margin-bottom: 20px; margin-top:0;">Guarda tu progreso y gana puntos reales.</p>
 
     <div class="input-group">
       <label>CATEGORÍA DEL EJERCICIO</label>
@@ -233,15 +188,7 @@
 
     <div class="input-group">
       <label>MOVIMIENTO</label>
-      <select id="appMovimiento" onchange="mostrarVideoDemostrativo()"><option value="">Seleccione...</option></select>
-    </div>
-
-    <!-- MINI REPRODUCTOR DE VIDEO -->
-    <div class="video-container" id="videoContainer">
-      <img id="videoImg" src="" alt="Técnica de ejercicio">
-      <div class="video-overlay">
-        <div class="video-title">🎥 <span id="videoTitleText">Técnica Correcta</span></div>
-      </div>
+      <select id="appMovimiento"><option value="">Seleccione...</option></select>
     </div>
 
     <div class="input-group">
@@ -250,31 +197,18 @@
     </div>
 
     <div class="input-group">
-      <label>OBSERVACIONES O SENSACIONES</label>
+      <label>OBSERVACIONES (OPCIONAL)</label>
       <textarea id="appObservaciones" rows="2" placeholder="Me sentí fuerte, fallé el último intento..."></textarea>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
-      <input type="file" id="inputFoto" accept="image/*" capture="environment">
-      <button class="btn btn-media" onclick="document.getElementById('inputFoto').click()">📸 FOTO PR</button>
-      
-      <input type="file" id="inputVideo" accept="video/*" capture="environment">
-      <button class="btn btn-media" onclick="document.getElementById('inputVideo').click()">🎥 VIDEO PR</button>
-    </div>
-
-    <div class="queue-container" id="queueContainer" style="display:none;">
-      <label style="color:white; margin-bottom: 10px; display:block;">EVIDENCIA ADJUNTA (<span id="queueCount">0</span>)</label>
-      <div id="queueList"></div>
-    </div>
-
-    <button id="btnEnviarReporte" class="btn" style="margin-top: 20px;" onclick="enviarRutina()">🚀 SUBIR RESULTADO (+50 PTS)</button>
+    <button class="btn" style="margin-top: 20px;" onclick="enviarRutina()">🚀 SUBIR RESULTADO (+50 PTS)</button>
     <button class="btn btn-outline" style="margin-top: 10px; font-size: 13px;" onclick="cambiarVista('vistaDashboard')">CANCELAR</button>
   </div>
 
   <!-- LEADERBOARD -->
   <div class="view-container" id="vistaLeaderboard">
     <h2 style="font-size: 24px; color: var(--gold); margin-bottom: 5px;">TOP ATLETAS</h2>
-    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">Los mejores de Elementa Box.</p>
+    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">Los puntajes reales del Box.</p>
 
     <div class="leaderboard-list" id="listaLeaderboard">
       <!-- Se llena por JS -->
@@ -283,51 +217,27 @@
     <button class="btn btn-outline" style="margin-top: 25px;" onclick="cambiarVista('vistaDashboard')">VOLVER AL DASHBOARD</button>
   </div>
 
-  <div class="footer" style="position: relative; margin-top: 25px; width: 100%; text-align: center; font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 4px; text-transform: uppercase; font-weight: 700; z-index: 10; padding-bottom: 20px;">
+  <div style="position: relative; margin-top: 25px; width: 100%; text-align: center; font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 4px; text-transform: uppercase; font-weight: 700; padding-bottom: 20px;">
     Desarrollado para ⚡ Elementa Box ⚡
   </div>
 
   <script>
     // =========================================================
-    // URL DE TU APPS SCRIPT ACTUALIZADA
+    // PEGA AQUÍ TU ÚLTIMA URL DESPUÉS DE LA NUEVA IMPLEMENTACIÓN
     // =========================================================
     const URL_APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbwvf_1k7tYp0OEME00nrLQjoMiJzYECQyJuSkvw8Q81AIauyJ3TA2wwvFWZa2PjRY6A/exec';
     
     // DATOS HARDCODEADOS PARA EL BOX
     const GYM_DATA = {
-      "HALTEROFILIA": {
-        frentes: ["Snatch (Arranque)", "Clean & Jerk (Envión)", "Squat Clean", "Power Snatch", "Overhead Squat", "Front Squat", "Back Squat", "Deadlift (Peso Muerto)"],
-        imagenes: {
-          "Snatch (Arranque)": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=800&q=80",
-          "Clean & Jerk (Envión)": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=800&q=80",
-          "Deadlift (Peso Muerto)": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80",
-          "default": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=800&q=80"
-        }
-      },
-      "GIMNASIA": {
-        frentes: ["Pull-ups (Dominadas)", "Chest to Bar", "Muscle Up (Barra)", "Muscle Up (Anillas)", "Toes to Bar", "Handstand Walk", "HSPU"],
-        imagenes: {
-          "Pull-ups (Dominadas)": "https://images.unsplash.com/photo-1598971639058-fab3c3109a00?auto=format&fit=crop&w=800&q=80",
-          "Muscle Up (Anillas)": "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=800&q=80",
-          "default": "https://images.unsplash.com/photo-1526506114861-51ce30a3f056?auto=format&fit=crop&w=800&q=80"
-        }
-      },
-      "METCON / CARDIO": {
-        frentes: ["Remo (Row)", "Assault Bike", "Correr (Run)", "Double Unders", "Burpees", "Box Jumps", "Wall Balls"],
-        imagenes: {
-          "Remo (Row)": "https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=800&q=80",
-          "Double Unders": "https://images.unsplash.com/photo-1522898467493-49726bf28798?auto=format&fit=crop&w=800&q=80",
-          "default": "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?auto=format&fit=crop&w=800&q=80"
-        }
-      }
+      "HALTEROFILIA": ["Snatch (Arranque)", "Clean & Jerk (Envión)", "Squat Clean", "Power Snatch", "Overhead Squat", "Front Squat", "Back Squat", "Deadlift (Peso Muerto)"],
+      "GIMNASIA": ["Pull-ups (Dominadas)", "Chest to Bar", "Muscle Up (Barra)", "Muscle Up (Anillas)", "Toes to Bar", "Handstand Walk", "HSPU"],
+      "METCON / CARDIO": ["Remo (Row)", "Assault Bike", "Correr (Run)", "Double Unders", "Burpees", "Box Jumps", "Wall Balls"]
     };
 
     let usuarioActual = {};
-    let archivosQueue = [];
-    let misPuntosLocales = localStorage.getItem('elementa_puntos') ? parseInt(localStorage.getItem('elementa_puntos')) : 0;
-    let miRachaLocal = localStorage.getItem('elementa_racha') ? parseInt(localStorage.getItem('elementa_racha')) : 1;
+    let backendLeaderboard = []; // Aquí guardaremos la tabla real que manda Sheets
 
-    // --- FUNCIÓN ROBUSTA DE COMUNICACIÓN (EVITA ERRORES CORS) ---
+    // COMUNICACIÓN CON SHEETS
     async function peticionBackend(payload) {
         try {
             const response = await fetch(URL_APPS_SCRIPT, { 
@@ -336,32 +246,28 @@
                 body: JSON.stringify(payload) 
             });
             const text = await response.text();
-            
             try {
                 return JSON.parse(text);
             } catch (err) {
-                // Si Google devuelve HTML en vez de JSON, significa que hay problema de permisos.
-                if(text.includes("<html")) {
-                    return { estado: "error", mensaje: "Google bloqueó la conexión. En Apps Script debes implementar eligiendo: Ejecutar como 'TÚ' y Acceso 'CUALQUIER PERSONA'." };
-                }
-                return { estado: "error", mensaje: "Respuesta del servidor inválida. Asegúrate de que las hojas en tu Excel se llamen exactamente: PERSONAL AUTORIZADO, PROYECTOS Y FRENTES, TRAZABILIDAD." };
+                return { estado: "error", mensaje: "Asegúrate de haber hecho una NUEVA IMPLEMENTACIÓN." };
             }
         } catch (error) {
-            return { estado: "error", mensaje: "Error de red. Puede ser un bloqueo temporal, verifica tu conexión a internet." };
+            return { estado: "error", mensaje: "Error de red." };
         }
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
-        mostrarLoader("Verificando Conexión");
+        mostrarLoader("Cargando base de datos...");
         const result = await peticionBackend({ action: 'init' });
         
         if (result.estado === 'exito') {
+            backendLeaderboard = result.leaderboard || [];
             ocultarLoader();
             cambiarVista('vistaLogin');
         } else {
-            alert("⚠️ " + result.mensaje); // ¡Ahora el error te dirá exactamente qué falla!
+            alert("⚠️ ERROR: " + result.mensaje); 
             ocultarLoader();
-            cambiarVista('vistaLogin'); // Permite probar la vista incluso si falla
+            cambiarVista('vistaLogin');
         }
     });
 
@@ -370,7 +276,7 @@
       const password = document.getElementById('loginPassword').value.trim();
       if(!nombre || !password) return alert("Por favor ingresa Atleta y Contraseña.");
       
-      mostrarLoader("Autenticando");
+      mostrarLoader("Autenticando...");
       const res = await peticionBackend({ action: 'login', nombre: nombre, password: password });
       
       if(res.estado === 'exito') {
@@ -379,23 +285,11 @@
         
         const badge = document.getElementById('badgeModulo');
         badge.style.display = 'block';
-        if (res.cargo && res.cargo.toUpperCase().includes('COACH')) {
-            badge.innerText = '🛡️ COACH';
-            badge.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
-        } else {
-            badge.innerText = '🏋️ ELEMENTA';
-            badge.style.background = 'linear-gradient(135deg, #ff4500, #cc3700)';
-        }
+        badge.innerText = (res.cargo && res.cargo.includes('COACH')) ? '🛡️ COACH' : '🏋️ ELEMENTA';
+        badge.style.background = (res.cargo && res.cargo.includes('COACH')) ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 'linear-gradient(135deg, #ff4500, #cc3700)';
         
-        if(misPuntosLocales === 0) {
-          misPuntosLocales = Math.floor(Math.random() * 500) + 100;
-          miRachaLocal = Math.floor(Math.random() * 5) + 1;
-          localStorage.setItem('elementa_puntos', misPuntosLocales);
-          localStorage.setItem('elementa_racha', miRachaLocal);
-        }
-
-        document.getElementById('dashPuntos').innerText = `🏆 ${misPuntosLocales}`;
-        document.getElementById('dashRacha').innerText = `🔥 ${miRachaLocal}`;
+        // Puntos REALES desde Excel
+        document.getElementById('dashPuntos').innerText = `🏆 ${res.puntos}`;
 
         document.getElementById('loginPassword').value = ''; 
         ocultarLoader();
@@ -415,12 +309,12 @@
         
         if(!cedula || !nombre) return alert("Documento y Nombre son obligatorios.");
 
-        mostrarLoader("Registrando");
+        mostrarLoader("Registrando...");
         const res = await peticionBackend({ action: 'register', cedula, nombre, correo, cargo, proyecto });
         
         ocultarLoader();
         if(res.estado === 'exito') {
-            alert("¡Solicitud enviada! Pide tu contraseña al Coach/Administrador.");
+            alert("¡Solicitud enviada! El sistema administrativo la aprobará pronto.");
             cambiarVista('vistaLogin');
         } else {
             alert("❌ " + res.mensaje);
@@ -433,14 +327,9 @@
         Object.keys(GYM_DATA).forEach(cat => {
             selectCat.innerHTML += `<option value="${cat}">${cat}</option>`;
         });
-        
         document.getElementById('appMovimiento').innerHTML = '<option value="">Seleccione...</option>';
-        document.getElementById('videoContainer').style.display = 'none';
         document.getElementById('appResultado').value = '';
         document.getElementById('appObservaciones').value = '';
-        archivosQueue = [];
-        actualizarUICola();
-        
         cambiarVista('vistaRutina');
     }
 
@@ -448,81 +337,13 @@
         const cat = document.getElementById('appCategoria').value;
         const selectMov = document.getElementById('appMovimiento');
         selectMov.innerHTML = '<option value="">Seleccione Movimiento...</option>';
-        document.getElementById('videoContainer').style.display = 'none';
-
         if(GYM_DATA[cat]) {
-            GYM_DATA[cat].frentes.forEach(mov => {
+            GYM_DATA[cat].forEach(mov => {
                 selectMov.innerHTML += `<option value="${mov}">${mov}</option>`;
             });
         }
     }
 
-    function mostrarVideoDemostrativo() {
-        const cat = document.getElementById('appCategoria').value;
-        const mov = document.getElementById('appMovimiento').value;
-        const videoContainer = document.getElementById('videoContainer');
-        const videoImg = document.getElementById('videoImg');
-        const videoTitleText = document.getElementById('videoTitleText');
-
-        if(cat && mov && GYM_DATA[cat]) {
-            let imgSrc = GYM_DATA[cat].imagenes[mov] || GYM_DATA[cat].imagenes["default"];
-            videoImg.src = imgSrc;
-            videoTitleText.innerText = mov;
-            videoContainer.style.display = 'block';
-        } else {
-            videoContainer.style.display = 'none';
-        }
-    }
-
-    // --- MANEJO DE ARCHIVOS (FOTOS/VIDEOS) ---
-    document.getElementById('inputFoto').addEventListener('change', e => procesarArchivoLocal(e, 'Foto'));
-    document.getElementById('inputVideo').addEventListener('change', e => procesarArchivoLocal(e, 'Video'));
-
-    function procesarArchivoLocal(e, tipo) {
-      const archivo = e.target.files[0];
-      if (!archivo) return;
-      if (archivo.size > 20 * 1024 * 1024) { alert(`Archivo muy pesado (Máx 20MB).`); e.target.value = ""; return; }
-      
-      let extension = archivo.name.split('.').pop().toLowerCase();
-      if(tipo === 'Video') extension = 'mp4'; 
-      
-      const reader = new FileReader();
-      reader.readAsDataURL(archivo);
-      reader.onloadend = function() {
-          archivosQueue.push({ base64: reader.result, tipo: tipo, extension: extension });
-          actualizarUICola();
-      }
-      e.target.value = "";
-    }
-
-    function removerDeCola(index) {
-        archivosQueue.splice(index, 1);
-        actualizarUICola();
-    }
-
-    function actualizarUICola() {
-        const container = document.getElementById('queueContainer');
-        const queueList = document.getElementById('queueList');
-        document.getElementById('queueCount').innerText = archivosQueue.length;
-        
-        if(archivosQueue.length === 0) {
-            container.style.display = 'none';
-            return;
-        }
-
-        container.style.display = 'block';
-        queueList.innerHTML = "";
-        
-        archivosQueue.forEach((item, index) => {
-            let icon = item.tipo === 'Foto' ? '📸' : '🎥';
-            let div = document.createElement('div');
-            div.className = 'queue-item';
-            div.innerHTML = `<span>${icon} Evidencia ${index + 1} adjunta</span> <button class="btn-remove" onclick="removerDeCola(${index})">×</button>`;
-            queueList.appendChild(div);
-        });
-    }
-
-    // --- ENVÍO DE DATOS ---
     async function enviarRutina() {
         const categoria = document.getElementById('appCategoria').value;
         const movimiento = document.getElementById('appMovimiento').value;
@@ -530,69 +351,29 @@
         const observaciones = document.getElementById('appObservaciones').value.trim();
         
         if(!categoria || !movimiento || !resultado) {
-            return alert("Por favor selecciona la categoría, el movimiento y anota tu resultado.");
+            return alert("Selecciona la categoría, el movimiento y anota tu resultado.");
         }
 
-        mostrarLoader("Registrando Marca...");
-        let errores = 0;
-        let linksDeArchivos = []; 
-
-        for(let i=0; i<archivosQueue.length; i++) {
-            let item = archivosQueue[i];
-            let nombreFinal = `PR_${movimiento.replace(/[^a-zA-Z0-9]/g, '')}_${new Date().getTime()}.${item.extension}`;
-
-            const res = await peticionBackend({ action: 'upload', base64: item.base64, nombre: nombreFinal });
-            if(res.estado === 'exito') linksDeArchivos.push(res.url);
-            else errores++;
-        }
-
-        let resumenText = archivosQueue.length > 0 ? `Evidencia: ${linksDeArchivos.length} archivos subidos. ` : "Sin evidencia multimedia. ";
-        resumenText += `🔥 PUNTOS GANADOS: +50`;
-
-        const payloadTrazabilidad = {
-            action: 'trazabilidad',
-            usuario: usuarioActual.nombre,
-            cedula: usuarioActual.cedula,
-            proyecto: categoria,       
-            frente: movimiento,        
-            ubicacion: resultado,      
-            modulo: "BOX",             
-            resumen: resumenText,      
-            descripcion: observaciones 
-        };
+        mostrarLoader("Guardando y sumando puntos...");
         
-        const resEnvio = await peticionBackend(payloadTrazabilidad);
+        const resEnvio = await peticionBackend({ 
+            action: 'save_pr', 
+            cedula: usuarioActual.cedula
+        });
         
         if (resEnvio.estado === 'exito') {
-            misPuntosLocales += 50;
-            localStorage.setItem('elementa_puntos', misPuntosLocales);
-            document.getElementById('dashPuntos').innerText = `🏆 ${misPuntosLocales}`;
+            usuarioActual.puntos = resEnvio.nuevosPuntos;
+            document.getElementById('dashPuntos').innerText = `🏆 ${usuarioActual.puntos}`;
 
-            let wsText = `*--- NUEVO PR - ELEMENTA BOX ---*\n`;
+            let wsText = `*--- NUEVO PR | ELEMENTA BOX ---*\n`;
             wsText += `*Atleta:* ${usuarioActual.nombre}\n`;
-            wsText += `*Categoría:* ${categoria}\n`;
             wsText += `*Movimiento:* ${movimiento}\n`;
-            wsText += `*Marca:* ${resultado}\n\n`;
-            
-            if (observaciones !== "") {
-                wsText += `*Sensaciones:*\n_${observaciones}_\n\n`;
-            }
-            
-            if (linksDeArchivos.length > 0) {
-                wsText += `*EVIDENCIA ADJUNTA:*\n`;
-                linksDeArchivos.forEach((url, index) => {
-                    wsText += `- Archivo ${index + 1}: ${url}\n`;
-                });
-            }
+            wsText += `*Marca:* ${resultado}\n`;
+            if (observaciones !== "") wsText += `*Sensaciones:* _${observaciones}_\n`;
 
             let linkWa = `https://wa.me/?text=${encodeURIComponent(wsText)}`;
             let btnWhatsAppHTML = `<br><br><a href="${linkWa}" target="_blank" style="text-decoration:none; display: block;"><button class="btn btn-outline" style="border-color: #10b981; color: #10b981; margin-top:0;">💬 COMPARTIR EN WHATSAPP</button></a>`;
 
-            archivosQueue = [];
-            actualizarUICola();
-            document.getElementById('appResultado').value = '';
-            document.getElementById('appObservaciones').value = '';
-            
             ocultarLoader();
             mostrarAnimacionPuntos("+50 PTS");
             
@@ -600,11 +381,16 @@
             divExito.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100vh; background:rgba(0,0,0,0.9); z-index:999; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px;";
             divExito.innerHTML = `
                 <h2 style="color:#10b981; font-size: 24px;">¡MARCA REGISTRADA!</h2>
-                <p style="color:#9ca3af; text-align:center;">Tus datos fueron guardados correctamente.</p>
+                <p style="color:#9ca3af; text-align:center;">Se han sumado 50 puntos a tu perfil.</p>
                 ${btnWhatsAppHTML}
                 <button class="btn" style="max-width: 300px; margin-top: 20px;" onclick="this.parentElement.remove(); cambiarVista('vistaDashboard');">VOLVER AL DASHBOARD</button>
             `;
             document.body.appendChild(divExito);
+            
+            // Actualizar leaderboard localmente para este usuario
+            let userInLb = backendLeaderboard.find(u => u.nombre === usuarioActual.nombre);
+            if (userInLb) userInLb.puntos = usuarioActual.puntos;
+
         } else {
             ocultarLoader();
             alert("❌ Hubo un error guardando tu registro: " + resEnvio.mensaje); 
@@ -615,28 +401,16 @@
         const lista = document.getElementById('listaLeaderboard');
         lista.innerHTML = "";
         
-        let competidores = [
-            { nombre: "Laura G.", puntos: 1520 },
-            { nombre: "Yeison H.", puntos: 1450 },
-            { nombre: "Andrés M.", puntos: 1200 },
-            { nombre: "Daniela V.", puntos: 950 },
-            { nombre: usuarioActual.nombre || "Tú", puntos: misPuntosLocales }
-        ];
-        
-        competidores.sort((a,b) => b.puntos - a.puntos);
-        
-        let unicos = [];
-        let nombresVistos = new Set();
-        for(let c of competidores) {
-            if(!nombresVistos.has(c.nombre)) {
-                unicos.push(c);
-                nombresVistos.add(c.nombre);
-            }
+        // Ordenar del mayor al menor usando los datos leídos del Excel
+        let competidores = [...backendLeaderboard].sort((a,b) => b.puntos - a.puntos);
+
+        if (competidores.length === 0) {
+           lista.innerHTML = "<div style='padding:20px; color:#9ca3af;'>No hay puntajes aún.</div>";
         }
 
-        unicos.slice(0, 5).forEach((c, i) => {
+        competidores.slice(0, 7).forEach((c, i) => {
             let rankClass = i === 0 ? 'rank-1' : (i === 1 ? 'rank-2' : (i === 2 ? 'rank-3' : ''));
-            let isMe = c.nombre === (usuarioActual.nombre || "Tú");
+            let isMe = c.nombre === usuarioActual.nombre;
             let row = `
                 <div class="leaderboard-item" style="${isMe ? 'background: rgba(255,69,0,0.1);' : ''}">
                     <div class="rank ${rankClass}">${i + 1}</div>
@@ -663,7 +437,6 @@
         cambiarVista('vistaLogin');
     }
 
-    // --- UTILIDADES ---
     function cambiarVista(idVista) {
       document.querySelectorAll('.view-container').forEach(c => c.classList.remove('active'));
       document.getElementById(idVista).classList.add('active');
@@ -686,7 +459,6 @@
         document.getElementById('vistaLoader').style.height = 'auto';
         document.getElementById('vistaLoader').style.backgroundColor = 'transparent';
     }
-
   </script>
 </body>
 </html>
