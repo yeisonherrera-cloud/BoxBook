@@ -2,368 +2,413 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Elementa Box | App Oficial</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Elementa Box | Premium Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,500;0,700;0,900;1,900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
     :root { 
       --primary: #ff4500; 
-      --primary-dark: #cc3700;
-      --secondary: #1e1e1e; 
-      --bg-dark: #0a0a0a; 
+      --primary-gradient: linear-gradient(135deg, #ff4500 0%, #cc3700 100%);
+      --bg-dark: #050505; 
+      --glass-bg: rgba(25, 25, 25, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.08);
       --text-main: #ffffff;
       --text-muted: #9ca3af;
-      --card-bg: rgba(30, 30, 30, 0.85);
       --gold: #fbbf24;
+      --success: #10b981;
+      --danger: #ef4444;
+      --level-color: #3b82f6;
     }
     
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
     body { 
       margin: 0; padding: 0; 
       background-color: var(--bg-dark); 
-      background-image: radial-gradient(circle at top right, rgba(255, 69, 0, 0.1) 0%, transparent 40%), radial-gradient(circle at bottom left, rgba(255, 69, 0, 0.05) 0%, transparent 40%);
-      font-family: 'Roboto', sans-serif; 
+      font-family: 'Inter', sans-serif; 
       color: var(--text-main); 
-      text-align: center; 
-      overflow-y: auto; 
-      overflow-x: hidden; 
+      overflow-y: auto; overflow-x: hidden; 
       min-height: 100vh;
       display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-      -webkit-font-smoothing: antialiased;
+      padding-bottom: 90px;
     }
 
-    @keyframes fadeSlideUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+    .ambient-bg {
+      position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle at 50% 20%, rgba(255, 69, 0, 0.15) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(251, 191, 36, 0.05) 0%, transparent 30%);
+      animation: ambientRotate 30s linear infinite; z-index: -1; pointer-events: none;
+    }
+    @keyframes ambientRotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    @keyframes fadeSlideUp { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
+    @keyframes pulseFire { 0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(255,69,0,0.5));} 50% { transform: scale(1.1); filter: drop-shadow(0 0 15px rgba(255,69,0,0.9));} 100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(255,69,0,0.5));} }
 
     .view-container { 
-      width: 100%; max-width: 480px; /* Ancho optimizado para móviles */
-      padding: 20px; box-sizing: border-box; 
-      display: none; 
-      animation: fadeSlideUp 0.4s ease-out forwards;
-      margin-bottom: 20px;
+      width: 100%; max-width: 480px; padding: 20px; 
+      display: none; animation: fadeSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
     .view-container.active { display: block; }
 
-    h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; font-weight: 900; text-transform: uppercase; margin-top: 0; letter-spacing: -0.5px;}
-    .title-brand { font-size: 36px; font-style: italic; color: var(--text-main); text-shadow: 3px 3px 0px var(--primary); margin-bottom: 5px;}
+    h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; font-weight: 900; text-transform: uppercase; margin: 0;}
+    .title-brand { font-size: 40px; font-style: italic; background: -webkit-linear-gradient(#fff, #9ca3af); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0px 4px 20px rgba(255,69,0,0.4); margin-bottom: 5px; text-align: center;}
     
-    .input-group { margin-bottom: 16px; text-align: left; }
-    label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;}
-    input, select, textarea { 
-      width: 100%; padding: 16px; 
-      background: rgba(0, 0, 0, 0.6); 
-      border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; 
-      box-sizing: border-box; font-size: 15px; color: white; 
-      font-family: 'Roboto', sans-serif; transition: all 0.3s;
+    .glass-card {
+      background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border); border-radius: 20px;
+      padding: 20px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); margin-bottom: 20px;
     }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); background: rgba(0, 0, 0, 0.9); box-shadow: 0 0 10px rgba(255,69,0,0.3);}
+
+    .input-group { margin-bottom: 18px; text-align: left; }
+    label { display: block; font-size: 11px; font-family: 'Montserrat'; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 1px;}
+    input, select, textarea { 
+      width: 100%; padding: 16px; background: rgba(0, 0, 0, 0.4); 
+      border: 1px solid var(--glass-border); border-radius: 12px; 
+      font-size: 15px; color: white; font-family: 'Inter', sans-serif; transition: all 0.3s;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); background: rgba(0, 0, 0, 0.7); box-shadow: 0 0 15px rgba(255,69,0,0.2);}
     
+    /* Configuración de Input Numérico Dual */
+    .input-row { display: flex; gap: 10px; }
+    .input-row > div:first-child { flex: 1; }
+    .input-row > div:last-child { flex: 2; }
+    input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
     .btn { 
       width: 100%; padding: 18px; margin-top: 10px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; 
-      border: none; border-radius: 12px; 
-      font-size: 16px; font-family: 'Montserrat', sans-serif; font-weight: 900; font-style: italic; text-transform: uppercase; 
-      cursor: pointer; box-shadow: 0 6px 20px rgba(255, 69, 0, 0.4); transition: transform 0.2s, box-shadow 0.2s;
+      background: var(--primary-gradient); color: white; 
+      border: none; border-radius: 14px; 
+      font-size: 15px; font-family: 'Montserrat', sans-serif; font-weight: 900; letter-spacing: 1px;
+      cursor: pointer; box-shadow: 0 8px 25px rgba(255, 69, 0, 0.4); 
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex; align-items: center; justify-content: center; gap: 10px;
     }
-    .btn:active { transform: scale(0.97); box-shadow: 0 2px 10px rgba(255, 69, 0, 0.4); }
-    .btn-outline { background: transparent; border: 2px solid rgba(255,255,255,0.2); box-shadow: none; color: white;}
+    .btn:active { transform: scale(0.96); box-shadow: 0 4px 10px rgba(255, 69, 0, 0.4); }
+    .btn-outline { background: transparent; border: 2px solid rgba(255,255,255,0.15); box-shadow: none; color: white;}
 
-    /* Top Bar Mobile */
-    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);}
-    .top-bar-user { text-align: left; }
-    .top-bar-user span { display: block; font-size: 12px; color: var(--text-muted); text-transform: uppercase;}
-    .top-bar-user strong { font-family: 'Montserrat'; font-size: 18px; font-weight: 900;}
-    .top-bar-pts { background: rgba(251, 191, 36, 0.1); border: 1px solid var(--gold); padding: 8px 12px; border-radius: 20px; color: var(--gold); font-weight: bold; font-family: 'Montserrat'; display: flex; align-items: center; gap: 5px;}
+    .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--glass-border);}
+    .header-info h2 { font-size: 22px; }
+    .header-info p { margin: 5px 0 0 0; font-size: 13px; color: var(--text-muted); }
 
-    /* Dashboard Grid (Menú Móvil) */
-    .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;}
-    .menu-card { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 25px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: transform 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.5);}
-    .menu-card:active { transform: scale(0.95); }
-    .menu-icon { font-size: 32px; }
-    .menu-title { font-family: 'Montserrat'; font-weight: 800; font-size: 13px; text-transform: uppercase; color: white;}
+    /* Dashboard Widgets */
+    .hero-stats { display: flex; gap: 15px; margin-bottom: 20px; }
+    .hero-box { flex: 1; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 16px; padding: 15px; text-align: center; backdrop-filter: blur(10px); }
+    .hero-box h1 { font-size: 28px; margin-bottom: 5px; }
+    .hero-box span { font-size: 10px; color: var(--text-muted); font-family: 'Montserrat'; font-weight: 700; letter-spacing: 1px;}
+    .pts-color { color: var(--gold); text-shadow: 0 0 15px rgba(251, 191, 36, 0.4); }
+    .streak-color { color: var(--primary); text-shadow: 0 0 15px rgba(255, 69, 0, 0.4); animation: pulseFire 2s infinite;}
 
-    /* Sección Videos (Movimientos) */
-    .video-card { background: var(--card-bg); border-radius: 16px; overflow: hidden; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); text-align: left;}
-    .video-wrapper { position: relative; padding-bottom: 56.25%; /* 16:9 */ height: 0; }
-    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;}
-    .video-info { padding: 15px 20px; }
-    .video-info h3 { margin-bottom: 5px; font-size: 16px; color: white;}
-    .video-info p { margin: 0; font-size: 13px; color: var(--text-muted); line-height: 1.5;}
-    .video-reward { display: inline-block; margin-top: 10px; background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; border: 1px solid var(--success);}
-    .video-reward.completed { background: rgba(255,255,255,0.1); color: var(--text-muted); border-color: var(--text-muted); }
+    /* Progress Bar (Niveles) */
+    .level-card { background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); padding: 15px;}
+    .level-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;}
+    .level-title { font-size: 14px; color: var(--level-color); display: flex; align-items: center; gap: 5px;}
+    .level-pts { font-size: 12px; color: var(--text-main); font-family: 'Inter'; font-weight: 600;}
+    .progress-track { width: 100%; height: 8px; background: rgba(0,0,0,0.5); border-radius: 10px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #60a5fa); width: 0%; transition: width 1s cubic-bezier(0.16, 1, 0.3, 1); }
 
-    /* Sección Eventos */
-    .event-card { background: var(--card-bg); border-radius: 16px; overflow: hidden; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); text-align: left;}
-    .event-img { width: 100%; height: 200px; object-fit: cover; border-bottom: 3px solid var(--primary);}
-    .event-details { padding: 20px; }
-    .event-date { color: var(--primary); font-weight: bold; font-size: 12px; letter-spacing: 1px; display: block; margin-bottom: 5px;}
-    .event-title { font-size: 20px; margin-bottom: 10px;}
-    .event-desc { font-size: 14px; color: var(--text-muted); line-height: 1.5; margin-bottom: 15px;}
-    .event-tag { display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 20px; font-size: 12px;}
+    /* Misión Diaria */
+    .quest-card { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); display: flex; align-items: center; gap: 15px; padding: 15px; border-radius: 16px; margin-bottom: 25px;}
+    .quest-icon { font-size: 24px; color: var(--success); }
+    .quest-info h4 { font-size: 13px; color: var(--success); margin-bottom: 3px;}
+    .quest-info p { font-size: 11px; color: var(--text-muted); margin: 0;}
+
+    /* Historial Diario */
+    .history-container { margin-top: 20px; }
+    .history-header { font-size: 14px; margin-bottom: 15px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; color: white;}
+    .history-item { border-left: 2px solid var(--primary); padding-left: 15px; margin-bottom: 20px; position: relative;}
+    .history-item::before { content: ''; position: absolute; left: -6px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 10px var(--primary);}
+    .history-date { font-size: 11px; color: var(--text-muted); font-family: 'Montserrat'; font-weight: 700; display: flex; justify-content: space-between; margin-bottom: 8px;}
+    .history-points { color: var(--gold); }
+    .history-wod { background: rgba(0,0,0,0.4); padding: 10px 15px; border-radius: 8px; font-size: 13px; color: #e2e8f0; line-height: 1.6;}
+    .history-wod strong { color: white; }
+
+    /* Multiregistro de Rutina */
+    .rutina-item { background: rgba(0,0,0,0.5); border-left: 4px solid var(--primary); padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;}
+    .rutina-details h4 { font-size: 14px; margin-bottom: 3px; color: white;}
+    .rutina-details p { font-size: 12px; color: var(--text-muted); margin: 0; font-family: 'Inter'; font-weight: 600;}
+    .rutina-remove { color: var(--danger); background: none; border: none; font-size: 18px; cursor: pointer; padding: 5px;}
 
     /* Leaderboard */
-    .leaderboard-list { background: var(--card-bg); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);}
-    .leaderboard-item { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-    .leaderboard-item:last-child { border-bottom: none; }
-    .rank { font-size: 18px; font-weight: 900; font-family: 'Montserrat'; width: 30px; color: var(--text-muted);}
-    .rank-1 { color: var(--gold); font-size: 22px;}
-    .rank-2 { color: #e5e7eb; }
-    .rank-3 { color: #d97706; }
-    .lb-user { flex: 1; text-align: left; padding-left: 10px; font-weight: 700; font-size: 15px;}
-    .lb-points { font-weight: 900; font-family: 'Montserrat'; color: var(--primary); }
+    .lb-item { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--glass-border); }
+    .lb-item:last-child { border-bottom: none; }
+    .lb-rank { width: 40px; font-size: 20px; font-weight: 900; font-family: 'Montserrat'; color: var(--text-muted); text-align: center;}
+    .lb-rank.gold { color: var(--gold); font-size: 28px; text-shadow: 0 0 15px rgba(251, 191, 36, 0.5);}
+    .lb-rank.silver { color: #e2e8f0; font-size: 24px;}
+    .lb-rank.bronze { color: #cd7f32; font-size: 22px;}
+    .lb-info { flex: 1; text-align: left; padding-left: 15px;}
+    .lb-name { font-weight: bold; font-size: 15px; margin-bottom: 2px;}
+    .lb-level { font-size: 11px; color: var(--level-color); font-weight: bold; }
+    .lb-pts { font-weight: 900; font-family: 'Montserrat'; color: var(--primary); font-size: 14px;}
 
-    .link { color: var(--primary); cursor: pointer; text-decoration: underline; font-size: 13px;}
-
-    .loader-box { width: 60px; height: 60px; border: 5px solid rgba(255,69,0,0.2); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;}
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .points-animation {
-      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5);
-      font-family: 'Montserrat'; font-size: 52px; font-weight: 900; color: var(--gold);
-      text-shadow: 0 10px 30px rgba(251, 191, 36, 0.6);
-      opacity: 0; pointer-events: none; z-index: 9999;
-      animation: popPoints 2.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    /* Nav Inferior */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 480px; background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(20px); border-top: 1px solid var(--glass-border);
+      display: flex; justify-content: space-around; align-items: center;
+      padding: 15px 10px 25px 10px; z-index: 1000; display: none; 
     }
-    @keyframes popPoints { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); } 15% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); } 80% { opacity: 1; transform: translate(-50%, -80%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -100%) scale(0.8); } }
-
-    .demo-notice {
-        background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.5); 
-        color: #fbbf24; padding: 12px; border-radius: 8px; font-size: 13px; margin-bottom: 25px; line-height: 1.5;
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 5px;
+      color: var(--text-muted); text-decoration: none; font-size: 10px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; background: none; border: none; width: 25%;
     }
+    .nav-item i { font-size: 22px; transition: transform 0.2s;}
+    .nav-item.active { color: var(--primary); }
+    .nav-item.active i { transform: translateY(-4px); text-shadow: 0 5px 15px rgba(255,69,0,0.6);}
+
+    #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+    .link { color: var(--primary); cursor: pointer; font-size: 13px; text-decoration: none; font-weight: bold;}
+    .text-center { text-align: center; }
+
+    /* Videos */
+    .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; margin-bottom: 15px;}
+    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;}
+    .video-reward { display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; background: rgba(16, 185, 129, 0.15); color: var(--success); padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; border: 1px solid rgba(16, 185, 129, 0.3);}
+    .video-reward.completed { background: rgba(255,255,255,0.05); color: var(--text-muted); border-color: var(--glass-border); }
   </style>
 </head>
 <body>
 
-  <!-- PANTALLA DE CARGA -->
-  <div class="view-container active" id="vistaLoader" style="padding-top: 35vh;">
-    <div class="loader-box"></div>
-    <h2 class="title-brand" style="font-size: 28px;">ELEMENTA BOX</h2>
-    <div id="loaderMsg" style="color: var(--text-muted); font-size: 14px; margin-top: 10px;">Iniciando sistema...</div>
+  <div class="ambient-bg"></div>
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- LOADER -->
+  <div class="view-container active" id="vistaLoader" style="padding-top: 40vh; text-align: center;">
+    <i class="fa-solid fa-dumbbell fa-spin" style="font-size: 40px; color: var(--primary); margin-bottom: 20px;"></i>
+    <h2 class="title-brand" style="font-size: 28px;">ELEMENTA</h2>
+    <div id="loaderMsg" style="color: var(--text-muted); font-size: 13px; letter-spacing: 2px;">SINCRONIZANDO...</div>
   </div>
 
   <!-- LOGIN -->
   <div class="view-container" id="vistaLogin" style="padding-top: 10vh;">
-    <h1 class="title-brand" style="font-size: 46px; margin-bottom: 5px;">ELEMENTA</h1>
-    <p style="color: var(--text-muted); margin-bottom: 20px; letter-spacing: 2px;">PERFORMANCE TRACKER</p>
+    <h1 class="title-brand">ELEMENTA</h1>
+    <p style="color: var(--text-muted); margin-bottom: 30px; letter-spacing: 3px; font-size: 11px; text-align:center;">PERFORMANCE TRACKER</p>
     
-    <div class="demo-notice">
-      <b>VERSIÓN DEMO ACTIVA</b><br>Ingresa como <b>LAURA GARCIA</b> (Clave: BOX1) o <b>YEISON HERRERA</b> (Clave: BOX2).
+    <div class="glass-card" style="background: rgba(251, 191, 36, 0.05); border-color: rgba(251, 191, 36, 0.3);">
+      <p style="margin:0; font-size: 12px; color: var(--gold); line-height: 1.6;">
+        <i class="fa-solid fa-crown"></i> <b>DEMO VIP:</b> Ingresa como <b>LAURA GARCIA</b> (Clave: BOX1) o <b>YEISON HERRERA</b> (Clave: BOX2).
+      </p>
     </div>
 
-    <div class="input-group">
-      <label>ATLETA</label>
-      <input type="text" list="listaNombres" id="loginNombre" placeholder="Tu nombre registrado..." autocomplete="off">
-      <datalist id="listaNombres"></datalist>
-    </div>
-    <div class="input-group">
-      <label>CONTRASEÑA</label>
-      <input type="password" id="loginPassword" placeholder="••••••••">
+    <div class="glass-card">
+      <div class="input-group">
+        <label>ATLETA (NOMBRE REGISTRADO)</label>
+        <input type="text" list="listaNombres" id="loginNombre" placeholder="Tu nombre..." autocomplete="off">
+        <datalist id="listaNombres"></datalist>
+      </div>
+      <div class="input-group">
+        <label>CONTRASEÑA</label>
+        <input type="password" id="loginPassword" placeholder="••••••••">
+      </div>
+      <button class="btn" onclick="iniciarSesion()">INGRESAR <i class="fa-solid fa-arrow-right"></i></button>
     </div>
 
-    <button class="btn" onclick="iniciarSesion()">ENTRAR AL BOX</button>
-    <div style="margin-top: 25px;">
-      <span class="link" onclick="cambiarVista('vistaRegistro')">¿No tienes cuenta? Regístrate aquí</span>
+    <div class="text-center" style="margin-top: 20px;">
+      <span class="link" onclick="cambiarVista('vistaRegistro')">Solicitar cuenta nueva</span>
     </div>
   </div>
 
   <!-- REGISTRO -->
-  <div class="view-container" id="vistaRegistro" style="padding-top: 8vh;">
-    <h1 class="title-brand" style="font-size: 32px;">UNIRSE AL BOX</h1>
-    <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 14px;">Crea tu perfil de atleta en Elementa.</p>
-    
-    <div class="input-group"><label>NOMBRE COMPLETO</label><input type="text" id="regNombre" placeholder="Ej. Juan Pérez"></div>
-    <div class="input-group"><label>DOCUMENTO DE IDENTIDAD</label><input type="text" id="regCedula" placeholder="Número de documento"></div>
-    <div class="input-group"><label>NIVEL ACTUAL</label>
-      <select id="regProyecto">
-        <option value="PRINCIPIANTE">Scaled (Principiante)</option>
-        <option value="INTERMEDIO">Rx (Intermedio)</option>
-        <option value="AVANZADO">Elite (Avanzado)</option>
-      </select>
+  <div class="view-container" id="vistaRegistro" style="padding-top: 5vh;">
+    <h1 class="title-brand" style="font-size: 28px;">UNIRSE AL BOX</h1>
+    <div class="glass-card">
+      <div class="input-group"><label>NOMBRE COMPLETO</label><input type="text" id="regNombre" placeholder="Ej. Juan Pérez"></div>
+      <div class="input-group"><label>DOCUMENTO DE IDENTIDAD</label><input type="text" id="regCedula" placeholder="Número de documento"></div>
+      <button class="btn" onclick="registrarUsuario()">ENVIAR SOLICITUD</button>
+      <button class="btn btn-outline" onclick="cambiarVista('vistaLogin')">VOLVER</button>
     </div>
-
-    <button class="btn" onclick="registrarUsuario()">ENVIAR SOLICITUD</button>
-    <button class="btn btn-outline" onclick="cambiarVista('vistaLogin')">VOLVER</button>
   </div>
 
-  <!-- DASHBOARD PRINCIPAL (MENÚ MÓVIL) -->
+  <!-- DASHBOARD PRINCIPAL -->
   <div class="view-container" id="vistaDashboard">
-    <div class="top-bar">
-      <div class="top-bar-user">
-        <span>Hola, Atleta</span>
-        <strong id="dashNombre">NOMBRE ATLETA</strong>
+    <div class="header-bar" style="border:none; padding:0; margin-bottom: 20px;">
+      <div class="header-info">
+        <h2 id="dashNombre">ATLETA</h2>
+        <p>Tu progreso de hoy</p>
       </div>
-      <div class="top-bar-pts" id="dashPuntos">🏆 0</div>
+      <button class="btn-outline" style="border:none; color: var(--danger); font-size: 20px; width:auto;" onclick="cerrarSesion()">
+        <i class="fa-solid fa-power-off"></i>
+      </button>
     </div>
 
-    <div class="menu-grid">
-      <div class="menu-card" onclick="prepararRutina()">
-        <div class="menu-icon">🏋️</div>
-        <div class="menu-title">Registrar PR</div>
+    <!-- Stats Hero -->
+    <div class="hero-stats">
+      <div class="hero-box">
+        <h1 class="pts-color" id="dashPuntosBig">0</h1>
+        <span>PUNTOS TOTALES</span>
       </div>
-      <div class="menu-card" onclick="cambiarVista('vistaVideos'); inicializarVideos();">
-        <div class="menu-icon">📺</div>
-        <div class="menu-title">Aprender</div>
-      </div>
-      <div class="menu-card" onclick="mostrarLeaderboard()">
-        <div class="menu-icon">🏆</div>
-        <div class="menu-title">Leaderboard</div>
-      </div>
-      <div class="menu-card" onclick="cambiarVista('vistaEventos')">
-        <div class="menu-icon">🔥</div>
-        <div class="menu-title">Eventos</div>
+      <div class="hero-box">
+        <h1 class="streak-color" id="dashRachaBig"><i class="fa-solid fa-fire"></i> 0</h1>
+        <span>DÍAS SEGUIDOS</span>
       </div>
     </div>
 
-    <button class="btn btn-outline" onclick="cerrarSesion()" style="border-color: rgba(239, 68, 68, 0.5); color: #ef4444;">CERRAR SESIÓN</button>
+    <!-- Barra de Nivel -->
+    <div class="glass-card level-card">
+      <div class="level-header">
+        <div class="level-title"><i class="fa-solid fa-shield-halved"></i> RANGO: <strong id="dashNivelName">ROOKIE</strong></div>
+        <div class="level-pts"><span id="dashNivelProgreso">0</span> / <span id="dashNivelMeta">500</span> XP</div>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="dashNivelBarra"></div></div>
+    </div>
+
+    <!-- Misión Diaria -->
+    <div class="quest-card">
+      <div class="quest-icon"><i class="fa-solid fa-calendar-check"></i></div>
+      <div class="quest-info">
+        <h4>MISIÓN DIARIA</h4>
+        <p>¡Registra tu entrenamiento de hoy para sumar a tu racha de fuego!</p>
+      </div>
+    </div>
+
+    <!-- Botón Rápido -->
+    <button class="btn" onclick="cambiarVista('vistaRutina', 'nav-rutina')" style="padding: 20px; font-size: 16px; margin-bottom: 25px;">
+      <i class="fa-solid fa-plus-circle"></i> AÑADIR WOD DEL DÍA
+    </button>
+
+    <!-- Historial Feed -->
+    <div class="history-container">
+      <h3 class="history-header"><i class="fa-solid fa-clock-rotate-left"></i> HISTORIAL DE ACTIVIDAD</h3>
+      <div id="historialFeed">
+        <!-- Se llena con JS -->
+      </div>
+    </div>
   </div>
 
-  <!-- RUTINA / REGISTRO DE MARCA -->
+  <!-- RUTINA (MULTI-REGISTRO CON SELECTORES NUMÉRICOS) -->
   <div class="view-container" id="vistaRutina">
-    <div class="top-bar">
-      <div class="top-bar-user"><strong>REGISTRAR MARCA</strong></div>
+    <div class="header-bar">
+      <div class="header-info">
+        <h2>BUILD A WOD</h2>
+        <p>Añade todos tus ejercicios</p>
+      </div>
     </div>
 
-    <div class="input-group">
-      <label>CATEGORÍA</label>
-      <select id="appCategoria" onchange="actualizarMovimientos()"></select>
-    </div>
-    <div class="input-group">
-      <label>MOVIMIENTO</label>
-      <select id="appMovimiento"><option value="">Seleccione...</option></select>
-    </div>
-    <div class="input-group">
-      <label>RESULTADO (PESO / REPS / TIEMPO)</label>
-      <input type="text" id="appResultado" placeholder="Ej. 100 kg x 5 reps">
-    </div>
-    <div class="input-group">
-      <label>SENSACIONES (OPCIONAL)</label>
-      <textarea id="appObservaciones" rows="2" placeholder="Me sentí fuerte, la técnica mejoró..."></textarea>
+    <div class="glass-card">
+      <div class="input-group">
+        <label>CATEGORÍA</label>
+        <select id="appCategoria" onchange="actualizarMovimientos()"></select>
+      </div>
+      <div class="input-group">
+        <label>MOVIMIENTO</label>
+        <select id="appMovimiento"><option value="">Seleccione...</option></select>
+      </div>
+      
+      <!-- NUEVO: Selector de Tipo y Valor Numérico -->
+      <div class="input-group">
+        <label>MARCA O RESULTADO</label>
+        <div class="input-row">
+          <div>
+            <select id="appTipoResultado">
+              <option value="kg">Peso (kg)</option>
+              <option value="lb">Peso (lb)</option>
+              <option value="reps">Repeticiones</option>
+              <option value="min">Tiempo (MM:SS)</option>
+            </select>
+          </div>
+          <div>
+            <input type="text" inputmode="decimal" id="appValorResultado" placeholder="Ej: 50">
+          </div>
+        </div>
+      </div>
+      
+      <button class="btn btn-outline" style="border-style: dashed; border-color: var(--primary); color: var(--primary);" onclick="agregarEjercicio()">
+        <i class="fa-solid fa-plus"></i> AGREGAR A LA LISTA
+      </button>
     </div>
 
-    <button class="btn" onclick="enviarRutina()">🚀 GUARDAR PR (+50 PTS)</button>
-    <button class="btn btn-outline" onclick="cambiarVista('vistaDashboard')">VOLVER AL INICIO</button>
+    <div id="listaEjerciciosContainer" style="display: none; margin-bottom: 20px;">
+      <h3 style="font-size: 13px; margin-bottom: 10px; color: var(--gold);"><i class="fa-solid fa-clipboard-list"></i> RESUMEN DEL WOD:</h3>
+      <div id="listaEjerciciosDOM"></div>
+      
+      <button class="btn" style="margin-top: 20px;" onclick="enviarRutinaCompleta()">
+        <i class="fa-solid fa-bolt"></i> GUARDAR ENTRENAMIENTO
+      </button>
+    </div>
   </div>
 
-  <!-- MÓDULO VIDEOS (APRENDER) -->
+  <!-- ACADEMIA (VIDEOS) -->
   <div class="view-container" id="vistaVideos">
-    <div class="top-bar">
-      <div class="top-bar-user">
-        <span>Academia Elementa</span>
-        <strong>MOVIMIENTOS</strong>
-      </div>
-    </div>
-    <p style="text-align:left; color:var(--text-muted); font-size:13px; margin-top:0;">Visualiza el video completo para ganar puntos extra y mejorar tu técnica.</p>
-
-    <!-- Video 1 -->
-    <div class="video-card">
-      <div class="video-wrapper">
-        <div id="player-vdezTMulJ-k"></div>
-      </div>
-      <div class="video-info">
-        <h3>The Kettlebell Swing</h3>
-        <p>Aprende la técnica correcta del swing con pesa rusa. Enfócate en el empuje de cadera y activación de glúteos para no lastimar la espalda.</p>
-        <div class="video-reward" id="reward-vdezTMulJ-k">🎁 +20 Puntos al finalizar</div>
+    <div class="header-bar">
+      <div class="header-info">
+        <h2>ACADEMIA</h2>
+        <p>Mejora tu técnica y gana puntos</p>
       </div>
     </div>
 
-    <!-- Video 2 -->
-    <div class="video-card">
-      <div class="video-wrapper">
-        <div id="player-TU8QYVW0gDU"></div>
-      </div>
-      <div class="video-info">
-        <h3>The Burpee</h3>
-        <p>El movimiento más amado y odiado del Box. Domina la eficiencia para no fatigarte rápido y mejorar tu resistencia cardiovascular.</p>
-        <div class="video-reward" id="reward-TU8QYVW0gDU">🎁 +20 Puntos al finalizar</div>
+    <div class="glass-card" style="padding: 0; overflow: hidden;">
+      <div class="video-wrapper"><div id="player-vdezTMulJ-k"></div></div>
+      <div style="padding: 15px 20px;">
+        <h3 style="font-size: 15px;">The Kettlebell Swing</h3>
+        <div class="video-reward" id="reward-vdezTMulJ-k"><i class="fa-solid fa-gift"></i> +20 XP al finalizar</div>
       </div>
     </div>
 
-    <!-- Video 3 -->
-    <div class="video-card">
-      <div class="video-wrapper">
-        <div id="player-aAggnpPyR6E"></div>
-      </div>
-      <div class="video-info">
-        <h3>The Pull-Up</h3>
-        <p>Fortalece tu espalda y brazos dominando las tracciones estrictas en barra. Fundamental antes de pasar al kipping.</p>
-        <div class="video-reward" id="reward-aAggnpPyR6E">🎁 +20 Puntos al finalizar</div>
+    <div class="glass-card" style="padding: 0; overflow: hidden;">
+      <div class="video-wrapper"><div id="player-TU8QYVW0gDU"></div></div>
+      <div style="padding: 15px 20px;">
+        <h3 style="font-size: 15px;">The Burpee</h3>
+        <div class="video-reward" id="reward-TU8QYVW0gDU"><i class="fa-solid fa-gift"></i> +20 XP al finalizar</div>
       </div>
     </div>
-
-    <button class="btn btn-outline" style="margin-top: 10px;" onclick="cambiarVista('vistaDashboard')">VOLVER AL INICIO</button>
-  </div>
-
-  <!-- MÓDULO EVENTOS -->
-  <div class="view-container" id="vistaEventos">
-    <div class="top-bar">
-      <div class="top-bar-user">
-        <span>Comunidad</span>
-        <strong>PRÓXIMOS EVENTOS</strong>
-      </div>
-    </div>
-
-    <!-- Evento 1 -->
-    <div class="event-card">
-      <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=800&q=80" alt="" class="event-img">
-      <div class="event-details">
-        <span class="event-date">DOMINGO, 25 DE JUNIO • 10:00 AM</span>
-        <h3 class="event-title">Elementa Brunch & WOD</h3>
-        <p class="event-desc">Únete a nuestra comunidad para un WOD en equipo seguido de un brunch saludable para recargar energías y compartir con los demás atletas.</p>
-        <div style="display: flex; gap: 10px;">
-            <span class="event-tag">📍 Elementa Box</span>
-            <span class="event-tag">🎟️ Cupos Limitados</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Evento 2 -->
-    <div class="event-card">
-      <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=800&q=80" alt="" class="event-img">
-      <div class="event-details">
-        <span class="event-date">SÁBADO, 15 DE JULIO • 8:00 AM</span>
-        <h3 class="event-title">Torneo Interno Lifters</h3>
-        <p class="event-desc">Demuestra tu fuerza en nuestra competencia interna de Halterofilia (Snatch y Clean & Jerk). Habrá premios para las categorías Scaled y Rx.</p>
-        <div style="display: flex; gap: 10px;">
-            <span class="event-tag">📍 Elementa Box</span>
-            <span class="event-tag">🏅 Premios Especiales</span>
-        </div>
-      </div>
-    </div>
-
-    <button class="btn btn-outline" style="margin-top: 10px;" onclick="cambiarVista('vistaDashboard')">VOLVER AL INICIO</button>
   </div>
 
   <!-- LEADERBOARD -->
   <div class="view-container" id="vistaLeaderboard">
-    <div class="top-bar">
-      <div class="top-bar-user">
-        <span>Competencia</span>
-        <strong style="color: var(--gold);">TOP ATLETAS</strong>
+    <div class="header-bar">
+      <div class="header-info">
+        <h2 style="color: var(--gold);">LEADERBOARD</h2>
+        <p>Rank global de atletas</p>
       </div>
     </div>
 
-    <div class="leaderboard-list" id="listaLeaderboard">
-      <!-- Se llena por JS -->
+    <div class="glass-card" style="padding: 0;">
+      <div id="listaLeaderboard"></div>
     </div>
-
-    <button class="btn btn-outline" style="margin-top: 25px;" onclick="cambiarVista('vistaDashboard')">VOLVER AL INICIO</button>
   </div>
 
-  <!-- API de YouTube (Carga de forma asíncrona) -->
+  <!-- BOTTOM NAVIGATION BAR -->
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="nav-item active" id="nav-inicio" onclick="cambiarVista('vistaDashboard', 'nav-inicio')">
+      <i class="fa-solid fa-house"></i><span>Inicio</span>
+    </button>
+    <button class="nav-item" id="nav-rutina" onclick="cambiarVista('vistaRutina', 'nav-rutina'); prepararRutina();">
+      <i class="fa-solid fa-dumbbell"></i><span>WOD</span>
+    </button>
+    <button class="nav-item" id="nav-academia" onclick="cambiarVista('vistaVideos', 'nav-academia'); inicializarVideos();">
+      <i class="fa-solid fa-play"></i><span>Academia</span>
+    </button>
+    <button class="nav-item" id="nav-rank" onclick="cambiarVista('vistaLeaderboard', 'nav-rank'); mostrarLeaderboard();">
+      <i class="fa-solid fa-ranking-star"></i><span>Rank</span>
+    </button>
+  </nav>
+
   <script src="https://www.youtube.com/iframe_api"></script>
 
   <script>
     // =========================================================
-    // BASE DE DATOS SIMULADA (LOCAL MOCK) - INDEPENDIENTE
+    // BASE DE DATOS SIMULADA Y LÓGICA DE GAMIFICACIÓN
     // =========================================================
     const GYM_DATA = {
-      "HALTEROFILIA": ["Snatch (Arranque)", "Clean & Jerk (Envión)", "Squat Clean", "Power Snatch", "Overhead Squat", "Front Squat", "Back Squat", "Deadlift (Peso Muerto)"],
-      "GIMNASIA": ["Pull-ups (Dominadas)", "Chest to Bar", "Muscle Up (Barra)", "Muscle Up (Anillas)", "Toes to Bar", "Handstand Walk", "HSPU"],
-      "METCON / CARDIO": ["Remo (Row)", "Assault Bike", "Correr (Run)", "Double Unders", "Burpees", "Box Jumps", "Wall Balls"]
+      "HALTEROFILIA": ["Snatch (Arranque)", "Clean & Jerk", "Squat Clean", "Power Snatch", "Overhead Squat", "Front Squat", "Deadlift"],
+      "GIMNASIA": ["Pull-ups", "Chest to Bar", "Muscle Up", "Toes to Bar", "Handstand Walk", "HSPU"],
+      "METCON / CARDIO": ["Row", "Assault Bike", "Run", "Double Unders", "Burpees", "Box Jumps", "Wall Balls"]
     };
 
+    // Sistema de Niveles
+    const NIVELES = [
+      { max: 500, nombre: "ROOKIE", color: "#3b82f6" },     // Azul
+      { max: 1500, nombre: "SCALED", color: "#10b981" },    // Verde
+      { max: 4000, nombre: "RX", color: "#8b5cf6" },        // Morado
+      { max: 10000, nombre: "ELITE", color: "#ff4500" },    // Naranja
+      { max: 999999, nombre: "FIREBREATHER", color: "#fbbf24" } // Oro
+    ];
+
     const USUARIOS_DEFECTO = [
-      { cedula: "1053873375", nombre: "LAURA GARCIA", password: "BOX1", cargo: "ATLETA", puntos: 1520, videosVistos: [] },
-      { cedula: "1053864506", nombre: "YEISON HERRERA", password: "BOX2", cargo: "COACH", puntos: 1450, videosVistos: [] },
-      { cedula: "1111111111", nombre: "DANIELA V", password: "BOX3", cargo: "ATLETA", puntos: 950, videosVistos: [] }
+      { cedula: "1053873375", nombre: "LAURA GARCIA", password: "BOX1", puntos: 1520, videosVistos: [], racha: 3, ultimaConexion: "2026-06-10", historial: [] },
+      { cedula: "1053864506", nombre: "YEISON HERRERA", password: "BOX2", puntos: 2450, videosVistos: [], racha: 12, ultimaConexion: "2026-06-10", historial: [ {fecha: "2026-06-10", puntos: 150, ejercicios: ["Snatch: 60 kg", "Burpees: 30 reps"]} ] },
+      { cedula: "1111111111", nombre: "DANIELA V", password: "BOX3", puntos: 450, videosVistos: [], racha: 1, ultimaConexion: "2026-06-08", historial: [] }
     ];
 
     let mockDB = JSON.parse(localStorage.getItem('elementa_mock_db')) || USUARIOS_DEFECTO;
@@ -371,326 +416,384 @@
 
     let usuarioActual = {};
     let backendLeaderboard = []; 
-
-    // Simulador de Peticiones
-    async function peticionBackend(payload) {
-        await new Promise(resolve => setTimeout(resolve, 600));
-
-        switch(payload.action) {
-            case 'init':
-                return { estado: 'exito', leaderboard: mockDB.map(u => ({ nombre: u.nombre, puntos: u.puntos })) };
-
-            case 'login':
-                const user = mockDB.find(u => u.nombre === payload.nombre.toUpperCase());
-                if (!user) return { estado: 'error', mensaje: 'Atleta no encontrado en la Demo.' };
-                if (user.password !== payload.password) return { estado: 'error', mensaje: 'Contraseña incorrecta.' };
-                return { estado: 'exito', user: user };
-
-            case 'register':
-                const exists = mockDB.find(u => u.cedula === payload.cedula);
-                if (exists) return { estado: 'error', mensaje: 'El documento ya está registrado.' };
-                
-                const randomPass = "BOX" + Math.floor(100 + Math.random() * 900);
-                mockDB.push({
-                    cedula: payload.cedula,
-                    nombre: payload.nombre.toUpperCase(),
-                    password: randomPass,
-                    cargo: 'ATLETA',
-                    puntos: 0,
-                    videosVistos: []
-                });
-                guardarEnDB();
-                return { estado: 'exito', mensaje: `¡Registrado! Tu clave generada para la demo es: ${randomPass}` };
-
-            case 'sumar_puntos':
-                const uPts = mockDB.find(u => u.cedula === payload.cedula);
-                if (uPts) {
-                    uPts.puntos += payload.cantidad;
-                    if(payload.videoId) {
-                        if(!uPts.videosVistos) uPts.videosVistos = [];
-                        uPts.videosVistos.push(payload.videoId);
-                    }
-                    guardarEnDB();
-                    return { estado: 'exito', nuevosPuntos: uPts.puntos };
-                }
-                return { estado: 'error' };
-
-            default:
-                return { estado: 'error', mensaje: 'Acción no reconocida.' };
-        }
-    }
+    let rutinaDiaria = [];
 
     // =========================================================
-    // LÓGICA DE LA INTERFAZ
+    // INICIO Y LOGIN
     // =========================================================
-
-    window.addEventListener('DOMContentLoaded', async () => {
-        mostrarLoader("Iniciando App...");
-        const result = await peticionBackend({ action: 'init' });
-        
-        if (result.estado === 'exito') {
-            backendLeaderboard = result.leaderboard || [];
-            const datalist = document.getElementById('listaNombres');
-            if(datalist) {
-                datalist.innerHTML = '';
-                backendLeaderboard.forEach(user => {
-                    let option = document.createElement('option');
-                    option.value = user.nombre;
-                    datalist.appendChild(option);
-                });
-            }
-            ocultarLoader();
-            cambiarVista('vistaLogin');
+    window.addEventListener('DOMContentLoaded', () => {
+        backendLeaderboard = mockDB.map(u => ({ nombre: u.nombre, puntos: u.puntos }));
+        const datalist = document.getElementById('listaNombres');
+        if(datalist) {
+            datalist.innerHTML = '';
+            backendLeaderboard.forEach(user => {
+                let option = document.createElement('option');
+                option.value = user.nombre;
+                datalist.appendChild(option);
+            });
         }
+        ocultarLoader();
+        cambiarVista('vistaLogin');
     });
 
-    async function iniciarSesion() {
+    function iniciarSesion() {
       const nombre = document.getElementById('loginNombre').value.trim().toUpperCase();
       const password = document.getElementById('loginPassword').value.trim();
       if(!nombre || !password) return alert("Ingresa Atleta y Contraseña.");
       
       mostrarLoader("Autenticando...");
-      const res = await peticionBackend({ action: 'login', nombre: nombre, password: password });
-      
-      if(res.estado === 'exito') {
-        usuarioActual = res.user;
-        if(!usuarioActual.videosVistos) usuarioActual.videosVistos = [];
-        
-        document.getElementById('dashNombre').innerText = usuarioActual.nombre;
-        document.getElementById('dashPuntos').innerText = `🏆 ${usuarioActual.puntos}`;
-        document.getElementById('loginPassword').value = ''; 
-        
-        // Actualizar UI de videos vistos
-        actualizarEstadoVideosUI();
+      setTimeout(() => {
+          const user = mockDB.find(u => u.nombre === nombre);
+          if (!user) { alert("Atleta no encontrado."); ocultarLoader(); return; }
+          if (user.password !== password) { alert("Contraseña incorrecta."); ocultarLoader(); return; }
+          
+          usuarioActual = user;
+          if(!usuarioActual.videosVistos) usuarioActual.videosVistos = [];
+          if(!usuarioActual.historial) usuarioActual.historial = [];
 
-        ocultarLoader();
-        cambiarVista('vistaDashboard');
-      } else {
-          alert("❌ " + res.mensaje);
+          // Lógica de Rachas (Streaks)
+          let hoy = new Date().toISOString().split('T')[0]; // Ej: 2026-06-11
+          let ayer = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+          
+          if (!usuarioActual.ultimaConexion) {
+              usuarioActual.racha = 1;
+          } else if (usuarioActual.ultimaConexion === ayer) {
+              usuarioActual.racha += 1;
+          } else if (usuarioActual.ultimaConexion !== hoy) {
+              usuarioActual.racha = 1; // Perdió la racha
+          }
+          usuarioActual.ultimaConexion = hoy;
+          guardarEnDB();
+
+          actualizarDashStats();
+          document.getElementById('loginPassword').value = ''; 
+          document.getElementById('bottomNav').style.display = 'flex'; 
+          actualizarEstadoVideosUI();
+
           ocultarLoader();
-      }
+          cambiarVista('vistaDashboard', 'nav-inicio');
+      }, 600);
     }
 
-    async function registrarUsuario() {
+    function registrarUsuario() {
         const cedula = document.getElementById('regCedula').value.trim();
         const nombre = document.getElementById('regNombre').value.trim().toUpperCase();
         if(!cedula || !nombre) return alert("Completa los datos.");
 
-        mostrarLoader("Registrando...");
-        const res = await peticionBackend({ action: 'register', cedula: cedula, nombre: nombre });
+        const exists = mockDB.find(u => u.cedula === cedula);
+        if (exists) return alert("El documento ya está registrado.");
         
-        ocultarLoader();
-        if(res.estado === 'exito') {
-            alert(res.mensaje); 
-            cambiarVista('vistaLogin');
-        } else {
-            alert("❌ " + res.mensaje);
-        }
+        const randomPass = "BOX" + Math.floor(100 + Math.random() * 900);
+        mockDB.push({ cedula: cedula, nombre: nombre, password: randomPass, puntos: 0, racha: 1, ultimaConexion: new Date().toISOString().split('T')[0], historial: [], videosVistos: [] });
+        guardarEnDB();
+        
+        alert(`¡Registrado! Tu clave para la demo es: ${randomPass}`);
+        window.location.reload();
     }
 
-    // --- RUTINAS Y PRs ---
+    // =========================================================
+    // RENDERIZADO DEL DASHBOARD (GAMIFICACIÓN)
+    // =========================================================
+    function obtenerNivel(pts) {
+        let base = 0;
+        for(let i=0; i<NIVELES.length; i++) {
+            if(pts < NIVELES[i].max) {
+                let progreso = ((pts - base) / (NIVELES[i].max - base)) * 100;
+                return { nombre: NIVELES[i].nombre, color: NIVELES[i].color, actual: pts, meta: NIVELES[i].max, progreso: progreso };
+            }
+            base = NIVELES[i].max;
+        }
+        return { nombre: "FIREBREATHER", color: "#fbbf24", actual: pts, meta: "MAX", progreso: 100 };
+    }
+
+    function actualizarDashStats() {
+      const elDashNombre = document.getElementById('dashNombre');
+      if (elDashNombre) elDashNombre.innerText = usuarioActual.nombre;
+      
+      const elDashPuntosBig = document.getElementById('dashPuntosBig');
+      if (elDashPuntosBig) elDashPuntosBig.innerText = usuarioActual.puntos;
+      
+      // Actualizar Racha
+      const rachaDOM = document.getElementById('dashRachaBig');
+      if (rachaDOM) {
+          rachaDOM.innerHTML = `<i class="fa-solid fa-fire"></i> ${usuarioActual.racha || 1}`;
+          if(usuarioActual.racha > 3) rachaDOM.style.animation = "pulseFire 1s infinite";
+          else rachaDOM.style.animation = "none";
+      }
+
+      // Actualizar Nivel
+      let nivelInfo = obtenerNivel(usuarioActual.puntos);
+      const dashNivelName = document.getElementById('dashNivelName');
+      if (dashNivelName) {
+          dashNivelName.innerText = nivelInfo.nombre;
+          dashNivelName.style.color = nivelInfo.color;
+      }
+      
+      const dashNivelProgreso = document.getElementById('dashNivelProgreso');
+      if (dashNivelProgreso) dashNivelProgreso.innerText = nivelInfo.actual;
+      
+      const dashNivelMeta = document.getElementById('dashNivelMeta');
+      if (dashNivelMeta) dashNivelMeta.innerText = nivelInfo.meta;
+      
+      const dashNivelBarra = document.getElementById('dashNivelBarra');
+      if (dashNivelBarra) {
+          dashNivelBarra.style.width = nivelInfo.progreso + "%";
+          dashNivelBarra.style.background = `linear-gradient(90deg, ${nivelInfo.color}88, ${nivelInfo.color})`;
+      }
+
+      // Renderizar Historial
+      const feed = document.getElementById('historialFeed');
+      if (feed) {
+          feed.innerHTML = '';
+          if(!usuarioActual.historial || usuarioActual.historial.length === 0) {
+              feed.innerHTML = '<p style="font-size:12px; color:gray; font-style:italic;">Aún no has registrado entrenamientos. ¡Añade tu primer WOD!</p>';
+          } else {
+              // Mostrar los últimos 5
+              [...usuarioActual.historial].reverse().slice(0, 5).forEach(h => {
+                  let exList = h.ejercicios.map(e => `<li><i class="fa-solid fa-check" style="color:var(--success); margin-right:5px;"></i> ${e}</li>`).join('');
+                  feed.innerHTML += `
+                      <div class="history-item">
+                          <div class="history-date">
+                              <span>📅 ${h.fecha}</span>
+                              <span class="history-points">+${h.puntos} XP</span>
+                          </div>
+                          <div class="history-wod">
+                              <ul style="margin:0; padding-left:0; list-style:none;">${exList}</ul>
+                          </div>
+                      </div>
+                  `;
+              });
+          }
+      }
+    }
+
+    // =========================================================
+    // SISTEMA DE RUTINA (RESTRINGIDA A NÚMEROS)
+    // =========================================================
     function prepararRutina() {
+        rutinaDiaria = [];
+        actualizarListaRutinaDOM();
         const selectCat = document.getElementById('appCategoria');
         selectCat.innerHTML = '<option value="">Seleccione Categoría...</option>';
         Object.keys(GYM_DATA).forEach(cat => { selectCat.innerHTML += `<option value="${cat}">${cat}</option>`; });
-        
         document.getElementById('appMovimiento').innerHTML = '<option value="">Seleccione...</option>';
-        document.getElementById('appResultado').value = '';
-        document.getElementById('appObservaciones').value = '';
-        cambiarVista('vistaRutina');
+        document.getElementById('appValorResultado').value = '';
     }
 
     function actualizarMovimientos() {
         const cat = document.getElementById('appCategoria').value;
         const selectMov = document.getElementById('appMovimiento');
         selectMov.innerHTML = '<option value="">Seleccione Movimiento...</option>';
-        if(GYM_DATA[cat]) {
-            GYM_DATA[cat].forEach(mov => { selectMov.innerHTML += `<option value="${mov}">${mov}</option>`; });
-        }
+        if(GYM_DATA[cat]) { GYM_DATA[cat].forEach(mov => { selectMov.innerHTML += `<option value="${mov}">${mov}</option>`; }); }
     }
 
-    async function enviarRutina() {
-        const cat = document.getElementById('appCategoria').value;
+    function agregarEjercicio() {
         const mov = document.getElementById('appMovimiento').value;
-        const res = document.getElementById('appResultado').value.trim();
-        if(!cat || !mov || !res) return alert("Faltan datos de tu PR.");
-
-        mostrarLoader("Guardando Registro...");
-        const resEnvio = await peticionBackend({ action: 'sumar_puntos', cedula: usuarioActual.cedula, cantidad: 50 });
+        const tipo = document.getElementById('appTipoResultado').value; // kg, lb, reps, min
+        const valor = document.getElementById('appValorResultado').value.trim();
         
-        if (resEnvio.estado === 'exito') {
-            usuarioActual.puntos = resEnvio.nuevosPuntos;
-            document.getElementById('dashPuntos').innerText = `🏆 ${usuarioActual.puntos}`;
+        if(!mov || !valor) return alert("Selecciona el movimiento y escribe un valor numérico/tiempo.");
 
-            ocultarLoader();
-            mostrarAnimacionPuntos("+50 PTS");
-            setTimeout(() => { cambiarVista('vistaDashboard'); }, 2000);
-            
-            // Actualizar leaderboard local
-            let userInLb = mockDB.find(u => u.cedula === usuarioActual.cedula);
-            if (userInLb) userInLb.puntos = usuarioActual.puntos;
-            backendLeaderboard = mockDB.map(u => ({ nombre: u.nombre, puntos: u.puntos }));
-        }
+        // Construir string (ej. "100 kg", "15 reps")
+        const resultadoStr = `${valor} ${tipo}`;
+        rutinaDiaria.push({ movimiento: mov, resultado: resultadoStr });
+        
+        document.getElementById('appValorResultado').value = '';
+        actualizarListaRutinaDOM();
     }
 
-    // --- LÓGICA DE YOUTUBE API Y RECOMPENSAS ---
+    function eliminarEjercicio(index) {
+        rutinaDiaria.splice(index, 1);
+        actualizarListaRutinaDOM();
+    }
+
+    function actualizarListaRutinaDOM() {
+        const container = document.getElementById('listaEjerciciosContainer');
+        const domList = document.getElementById('listaEjerciciosDOM');
+        if(rutinaDiaria.length === 0) { container.style.display = 'none'; return; }
+        
+        container.style.display = 'block';
+        domList.innerHTML = '';
+        rutinaDiaria.forEach((item, index) => {
+            domList.innerHTML += `
+                <div class="rutina-item">
+                    <div class="rutina-details"><h4>${item.movimiento}</h4><p>${item.resultado}</p></div>
+                    <button class="rutina-remove" onclick="eliminarEjercicio(${index})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `;
+        });
+    }
+
+    function enviarRutinaCompleta() {
+        if(rutinaDiaria.length === 0) return alert("No has añadido ejercicios.");
+        mostrarLoader("Procesando WOD...");
+        
+        setTimeout(() => {
+            const puntosGanados = rutinaDiaria.length * 50; 
+            usuarioActual.puntos += puntosGanados;
+            
+            let hoy = new Date().toISOString().split('T')[0];
+            let listaEjStr = rutinaDiaria.map(r => `${r.movimiento}: ${r.resultado}`);
+            
+            // Guardar en el historial
+            usuarioActual.historial.push({ fecha: hoy, puntos: puntosGanados, ejercicios: listaEjStr });
+            
+            // Guardar en DB Global
+            let userInLb = mockDB.find(u => u.cedula === usuarioActual.cedula);
+            if (userInLb) {
+                userInLb.puntos = usuarioActual.puntos;
+                userInLb.historial = usuarioActual.historial;
+            }
+            guardarEnDB();
+            backendLeaderboard = mockDB.map(u => ({ nombre: u.nombre, puntos: u.puntos }));
+
+            actualizarDashStats();
+            ocultarLoader();
+            dispararConfeti(); 
+            
+            rutinaDiaria = []; 
+            setTimeout(() => { cambiarVista('vistaDashboard', 'nav-inicio'); }, 2500);
+        }, 800);
+    }
+
+    // =========================================================
+    // YOUTUBE API & ACADEMIA
+    // =========================================================
     let players = {};
     let ytReady = false;
-
-    // Esta función es llamada automáticamente por la API de YouTube al cargar
-    function onYouTubeIframeAPIReady() {
-        ytReady = true;
-    }
+    function onYouTubeIframeAPIReady() { ytReady = true; }
 
     function inicializarVideos() {
-        if(!ytReady) {
-            setTimeout(inicializarVideos, 500); // Reintentar si la API aún no carga
-            return;
-        }
-
-        const videos = ['vdezTMulJ-k', 'TU8QYVW0gDU', 'aAggnpPyR6E'];
-        
+        if(!ytReady) { setTimeout(inicializarVideos, 500); return; }
+        const videos = ['vdezTMulJ-k', 'TU8QYVW0gDU'];
         videos.forEach(vid => {
             if(!players[vid]) {
                 players[vid] = new YT.Player('player-' + vid, {
-                    videoId: vid,
-                    playerVars: { 'rel': 0, 'modestbranding': 1 },
-                    events: { 'onStateChange': onPlayerStateChange }
+                    videoId: vid, playerVars: { 'rel': 0, 'modestbranding': 1 }, events: { 'onStateChange': onPlayerStateChange }
                 });
             }
         });
     }
 
-    async function onPlayerStateChange(event) {
-        // Cuando el video termina (Estado = 0)
+    function onPlayerStateChange(event) {
         if (event.data === YT.PlayerState.ENDED) {
-            // Extraer el ID del video desde la URL (truco rápido del iframe de YT)
             let videoUrl = event.target.getVideoUrl();
             let videoIdMatch = videoUrl.match(/[?&]v=([^&]+)/);
             if(!videoIdMatch) return;
             let videoId = videoIdMatch[1];
 
-            // Validar si ya lo vió
-            if(usuarioActual.videosVistos && usuarioActual.videosVistos.includes(videoId)) {
-                return; // Ya se le dieron los puntos antes
-            }
+            if(usuarioActual.videosVistos && usuarioActual.videosVistos.includes(videoId)) return;
 
-            // Sumar puntos
-            mostrarLoader("Asignando recompensa...");
-            const resEnvio = await peticionBackend({ 
-                action: 'sumar_puntos', 
-                cedula: usuarioActual.cedula, 
-                cantidad: 20,
-                videoId: videoId
-            });
-
-            if(resEnvio.estado === 'exito') {
-                usuarioActual.puntos = resEnvio.nuevosPuntos;
-                if(!usuarioActual.videosVistos) usuarioActual.videosVistos = [];
-                usuarioActual.videosVistos.push(videoId);
-
-                document.getElementById('dashPuntos').innerText = `🏆 ${usuarioActual.puntos}`;
-                
-                ocultarLoader();
-                actualizarEstadoVideosUI();
-                mostrarAnimacionPuntos("+20 PTS");
-                
-                // Actualizar leaderboard
-                backendLeaderboard = mockDB.map(u => ({ nombre: u.nombre, puntos: u.puntos }));
-            }
+            usuarioActual.puntos += 20;
+            usuarioActual.videosVistos.push(videoId);
+            let userInLb = mockDB.find(u => u.cedula === usuarioActual.cedula);
+            if (userInLb) { userInLb.puntos = usuarioActual.puntos; userInLb.videosVistos = usuarioActual.videosVistos; }
+            guardarEnDB();
+            
+            actualizarDashStats();
+            actualizarEstadoVideosUI();
+            dispararConfeti();
         }
     }
 
     function actualizarEstadoVideosUI() {
         if(!usuarioActual.videosVistos) return;
-        
-        const videos = ['vdezTMulJ-k', 'TU8QYVW0gDU', 'aAggnpPyR6E'];
-        videos.forEach(vid => {
+        ['vdezTMulJ-k', 'TU8QYVW0gDU'].forEach(vid => {
             const rewardLabel = document.getElementById('reward-' + vid);
-            if(rewardLabel) {
-                if(usuarioActual.videosVistos.includes(vid)) {
-                    rewardLabel.classList.add('completed');
-                    rewardLabel.innerHTML = '✅ Visto (Puntos Ganados)';
-                } else {
-                    rewardLabel.classList.remove('completed');
-                    rewardLabel.innerHTML = '🎁 +20 Puntos al finalizar';
-                }
+            if(rewardLabel && usuarioActual.videosVistos.includes(vid)) {
+                rewardLabel.classList.add('completed');
+                rewardLabel.innerHTML = '<i class="fa-solid fa-check"></i> Visto (+20 XP)';
             }
         });
     }
 
-    // --- LEADERBOARD ---
+    // =========================================================
+    // LEADERBOARD
+    // =========================================================
     function mostrarLeaderboard() {
         const lista = document.getElementById('listaLeaderboard');
         lista.innerHTML = "";
-        
         let competidores = [...backendLeaderboard].sort((a,b) => b.puntos - a.puntos);
 
-        competidores.slice(0, 7).forEach((c, i) => {
-            let rankClass = i === 0 ? 'rank-1' : (i === 1 ? 'rank-2' : (i === 2 ? 'rank-3' : ''));
+        competidores.slice(0, 10).forEach((c, i) => {
+            let rankClass = i === 0 ? 'gold' : (i === 1 ? 'silver' : (i === 2 ? 'bronze' : ''));
             let isMe = c.nombre === usuarioActual.nombre;
-            let row = `
-                <div class="leaderboard-item" style="${isMe ? 'background: rgba(255,69,0,0.1);' : ''}">
-                    <div class="rank ${rankClass}">${i + 1}</div>
-                    <div class="lb-user" style="${isMe ? 'color: var(--primary);' : ''}">${c.nombre} ${isMe ? '(Tú)' : ''}</div>
-                    <div class="lb-points">${c.puntos} pts</div>
+            let nivel = obtenerNivel(c.puntos);
+            
+            lista.innerHTML += `
+                <div class="lb-item" style="${isMe ? 'background: rgba(255,69,0,0.1); border-radius: 8px;' : ''}">
+                    <div class="lb-rank ${rankClass}">${i + 1}</div>
+                    <div class="lb-info">
+                        <div class="lb-name" style="${isMe ? 'color: var(--primary);' : ''}">${c.nombre}</div>
+                        <div class="lb-level" style="color: ${nivel.color};">${nivel.nombre}</div>
+                    </div>
+                    <div class="lb-pts">${c.puntos} XP</div>
                 </div>
             `;
-            lista.innerHTML += row;
         });
-        cambiarVista('vistaLeaderboard');
     }
 
-    // --- UTILIDADES ---
-    function mostrarAnimacionPuntos(texto) {
+    // =========================================================
+    // MOTOR DE CONFETI Y NAVEGACIÓN
+    // =========================================================
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = []; let animationId;
+
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas); resizeCanvas();
+
+    function dispararConfeti() {
+        particles = [];
+        const colors = ['#ff4500', '#fbbf24', '#ffffff', '#3b82f6'];
+        for(let i=0; i<120; i++) {
+            particles.push({
+                x: canvas.width / 2, y: canvas.height / 2, r: Math.random() * 6 + 2,
+                dx: Math.random() * 12 - 6, dy: Math.random() * -12 - 5,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                tilt: Math.floor(Math.random() * 10) - 10, tiltAngleIncrement: (Math.random() * 0.07) + 0.05, tiltAngle: 0
+            });
+        }
+        if(!animationId) drawConfetti();
+        
         const anim = document.createElement('div');
-        anim.className = 'points-animation';
-        anim.innerText = texto;
-        document.body.appendChild(anim);
-        setTimeout(() => { anim.remove(); }, 2500);
+        anim.className = 'points-animation'; anim.innerText = "¡NIVEL UP!";
+        document.body.appendChild(anim); setTimeout(() => { anim.remove(); }, 2500);
+    }
+
+    function drawConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); let active = false;
+        particles.forEach(p => {
+            p.tiltAngle += p.tiltAngleIncrement; p.y += (Math.cos(p.tiltAngle) + 1 + p.r / 2) / 2;
+            p.x += Math.sin(p.tiltAngle) * 2; p.dy += 0.05; p.x += p.dx; p.y += p.dy;
+            ctx.beginPath(); ctx.lineWidth = p.r; ctx.strokeStyle = p.color;
+            ctx.moveTo(p.x + p.tilt + p.r, p.y); ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r); ctx.stroke();
+            if(p.y <= canvas.height) active = true;
+        });
+        if(active) animationId = requestAnimationFrame(drawConfetti); 
+        else { cancelAnimationFrame(animationId); animationId = null; ctx.clearRect(0,0,canvas.width,canvas.height); }
     }
 
     function cerrarSesion() {
-        usuarioActual = {};
-        // Pausar videos si están reproduciéndose
-        Object.keys(players).forEach(k => {
-            if(players[k] && typeof players[k].pauseVideo === 'function') {
-                players[k].pauseVideo();
-            }
-        });
+        usuarioActual = {}; document.getElementById('bottomNav').style.display = 'none';
+        Object.keys(players).forEach(k => { if(players[k] && players[k].pauseVideo) players[k].pauseVideo(); });
         cambiarVista('vistaLogin');
     }
 
-    function cambiarVista(idVista) {
+    function cambiarVista(idVista, idNav = null) {
       document.querySelectorAll('.view-container').forEach(c => c.classList.remove('active'));
-      const view = document.getElementById(idVista);
-      if(view) view.classList.add('active');
+      const view = document.getElementById(idVista); if(view) view.classList.add('active');
+      if(idNav) {
+          document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+          document.getElementById(idNav).classList.add('active');
+      }
       window.scrollTo(0,0);
     }
 
     function mostrarLoader(msg) {
-        const msgObj = document.getElementById('loaderMsg');
-        if(msgObj) msgObj.innerText = msg;
-        const loader = document.getElementById('vistaLoader');
-        if(loader) {
-            loader.style.display = 'block';
-            loader.style.position = 'fixed';
-            loader.style.top = '0'; loader.style.left = '0';
-            loader.style.width = '100%'; loader.style.height = '100vh';
-            loader.style.zIndex = '999';
-            loader.style.backgroundColor = 'rgba(0,0,0,0.9)';
-        }
+        document.getElementById('loaderMsg').innerText = msg; document.getElementById('vistaLoader').classList.add('active');
     }
-
-    function ocultarLoader() {
-        const loader = document.getElementById('vistaLoader');
-        if(loader) {
-            loader.style.display = 'none';
-            loader.style.position = 'relative';
-            loader.style.height = 'auto';
-            loader.style.backgroundColor = 'transparent';
-        }
-    }
+    function ocultarLoader() { document.getElementById('vistaLoader').classList.remove('active'); }
   </script>
 </body>
 </html>
