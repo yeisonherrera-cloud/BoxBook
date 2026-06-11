@@ -127,6 +127,21 @@
     }
     @keyframes popPoints { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); } 20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); } 80% { opacity: 1; transform: translate(-50%, -80%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -100%) scale(0.8); } }
 
+    .modulo-badge {
+        position: absolute; 
+        top: 20px; 
+        right: 20px; 
+        color: white; 
+        padding: 6px 12px; 
+        border-radius: 12px; 
+        font-size: 11px; 
+        font-weight: 800; 
+        letter-spacing: 1px; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4); 
+        border: 1px solid rgba(255,255,255,0.2); 
+        z-index: 100; 
+        display: none;
+    }
   </style>
 </head>
 <body>
@@ -181,6 +196,7 @@
 
   <!-- DASHBOARD PRINCIPAL -->
   <div class="view-container" id="vistaDashboard">
+    <div id="badgeModulo" class="modulo-badge">ELEMENTA</div>
     <div class="dashboard-header">
       <div class="user-greeting">Hola, atleta</div>
       <div class="user-name" id="dashNombre">NOMBRE ATLETA</div>
@@ -267,13 +283,17 @@
     <button class="btn btn-outline" style="margin-top: 25px;" onclick="cambiarVista('vistaDashboard')">VOLVER AL DASHBOARD</button>
   </div>
 
+  <div class="footer" style="position: relative; margin-top: 25px; width: 100%; text-align: center; font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 4px; text-transform: uppercase; font-weight: 700; z-index: 10; padding-bottom: 20px;">
+    Desarrollado para ⚡ Elementa Box ⚡
+  </div>
+
   <script>
     // =========================================================
     // URL DE TU APPS SCRIPT ACTUAL
     // =========================================================
     const URL_APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbwvf_1k7tYp0OEME00nrLQjoMiJzYECQyJuSkvw8Q81AIauyJ3TA2wwvFWZa2PjRY6A/exec';
     
-    // DATOS HARDCODEADOS PARA EL BOX (Sobrescribe "Proyectos/Frentes" de construcción)
+    // DATOS HARDCODEADOS PARA EL BOX
     const GYM_DATA = {
       "HALTEROFILIA": {
         frentes: ["Snatch (Arranque)", "Clean & Jerk (Envión)", "Squat Clean", "Power Snatch", "Overhead Squat", "Front Squat", "Back Squat", "Deadlift (Peso Muerto)"],
@@ -346,6 +366,18 @@
           
           // Actualizar UI del Dashboard
           document.getElementById('dashNombre').innerText = res.nombre;
+          
+          // Lógica de validación purgada de elementos de terceros
+          // y reemplazada con visuales propios de Elementa Box
+          const badge = document.getElementById('badgeModulo');
+          badge.style.display = 'block';
+          if (res.cargo && res.cargo.toUpperCase().includes('COACH')) {
+              badge.innerText = '🛡️ COACH';
+              badge.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+          } else {
+              badge.innerText = '🏋️ ELEMENTA';
+              badge.style.background = 'linear-gradient(135deg, #ff4500, #cc3700)';
+          }
           
           // Si es un usuario nuevo (o vacio en localstorage), le damos puntos aleatorios para el demo
           if(misPuntosLocales === 0) {
@@ -436,7 +468,6 @@
         const videoTitleText = document.getElementById('videoTitleText');
 
         if(cat && mov && GYM_DATA[cat]) {
-            // Buscar imagen específica o usar default de la categoría
             let imgSrc = GYM_DATA[cat].imagenes[mov] || GYM_DATA[cat].imagenes["default"];
             videoImg.src = imgSrc;
             videoTitleText.innerText = mov;
@@ -509,7 +540,6 @@
         let errores = 0;
         let linksDeArchivos = []; 
 
-        // 1. Subir archivos si los hay
         for(let i=0; i<archivosQueue.length; i++) {
             let item = archivosQueue[i];
             let nombreFinal = `PR_${movimiento.replace(/[^a-zA-Z0-9]/g, '')}_${new Date().getTime()}.${item.extension}`;
@@ -522,7 +552,6 @@
             } catch (e) { errores++; }
         }
 
-        // 2. Enviar Trazabilidad (Mapeo a tu hoja de Excel)
         let resumenText = archivosQueue.length > 0 ? `Evidencia: ${linksDeArchivos.length} archivos subidos. ` : "Sin evidencia multimedia. ";
         resumenText += `🔥 PUNTOS GANADOS: +50`;
 
@@ -531,23 +560,58 @@
                 action: 'trazabilidad',
                 usuario: usuarioActual.nombre,
                 cedula: usuarioActual.cedula,
-                proyecto: categoria,       // Se guarda en la columna PROYECTO
-                frente: movimiento,        // Se guarda en la columna FRENTE
-                ubicacion: resultado,      // Se guarda en la columna UBICACIÓN
-                modulo: "BOX",             // Se guarda en la columna MÓDULO
-                resumen: resumenText,      // Se guarda en la columna RESUMEN DE ARCHIVOS
-                descripcion: observaciones // Se guarda en la columna DESCRIPCIÓN
+                proyecto: categoria,       
+                frente: movimiento,        
+                ubicacion: resultado,      
+                modulo: "BOX",             
+                resumen: resumenText,      
+                descripcion: observaciones 
             };
             await fetch(URL_APPS_SCRIPT, { method: 'POST', body: JSON.stringify(payloadTrazabilidad) });
             
-            // Éxito: Sumar puntos locales y mostrar animación
             misPuntosLocales += 50;
             localStorage.setItem('elementa_puntos', misPuntosLocales);
             document.getElementById('dashPuntos').innerText = `🏆 ${misPuntosLocales}`;
 
+            // --- TEXTO WHATSAPP LIMPIO Y NATIVO ELEMENTA ---
+            let wsText = `*--- NUEVO PR - ELEMENTA BOX ---*\n`;
+            wsText += `*Atleta:* ${usuarioActual.nombre}\n`;
+            wsText += `*Categoría:* ${categoria}\n`;
+            wsText += `*Movimiento:* ${movimiento}\n`;
+            wsText += `*Marca:* ${resultado}\n\n`;
+            
+            if (observaciones !== "") {
+                wsText += `*Sensaciones:*\n_${observaciones}_\n\n`;
+            }
+            
+            if (linksDeArchivos.length > 0) {
+                wsText += `*EVIDENCIA ADJUNTA:*\n`;
+                linksDeArchivos.forEach((url, index) => {
+                    wsText += `- Archivo ${index + 1}: ${url}\n`;
+                });
+            }
+
+            let linkWa = `https://wa.me/?text=${encodeURIComponent(wsText)}`;
+            let btnWhatsAppHTML = `<br><br><a href="${linkWa}" target="_blank" style="text-decoration:none; display: block;"><button class="btn btn-outline" style="border-color: #10b981; color: #10b981; margin-top:0;">💬 COMPARTIR EN WHATSAPP</button></a>`;
+
+            archivosQueue = [];
+            actualizarUICola();
+            document.getElementById('appResultado').value = '';
+            document.getElementById('appObservaciones').value = '';
+            
             ocultarLoader();
             mostrarAnimacionPuntos("+50 PTS");
-            cambiarVista('vistaDashboard');
+            
+            // Reutilizamos el div del loader para dar un mensaje de éxito temporal
+            const divExito = document.createElement('div');
+            divExito.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100vh; background:rgba(0,0,0,0.9); z-index:999; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px;";
+            divExito.innerHTML = `
+                <h2 style="color:#10b981; font-size: 24px;">¡MARCA REGISTRADA!</h2>
+                <p style="color:#9ca3af; text-align:center;">Tus datos fueron guardados correctamente.</p>
+                ${btnWhatsAppHTML}
+                <button class="btn" style="max-width: 300px; margin-top: 20px;" onclick="this.parentElement.remove(); cambiarVista('vistaDashboard');">VOLVER AL DASHBOARD</button>
+            `;
+            document.body.appendChild(divExito);
 
         } catch (e) { 
             ocultarLoader();
@@ -556,7 +620,6 @@
     }
 
     function mostrarLeaderboard() {
-        // Generar un leaderboard de prueba que incluye al usuario actual
         const lista = document.getElementById('listaLeaderboard');
         lista.innerHTML = "";
         
@@ -568,9 +631,8 @@
             { nombre: usuarioActual.nombre || "Tú", puntos: misPuntosLocales }
         ];
         
-        // Ordenar de mayor a menor
         competidores.sort((a,b) => b.puntos - a.puntos);
-        // Filtrar únicos si casualmente "Yeison H." era el mismo usuario
+        
         let unicos = [];
         let nombresVistos = new Set();
         for(let c of competidores) {
