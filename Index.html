@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Elementa Box | Tracking</title>
+  <title>Elementa Box | Demo Tracking</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root { 
@@ -103,6 +103,11 @@
     .modulo-badge {
         position: absolute; top: 20px; right: 20px; color: white; padding: 6px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.2); z-index: 100; display: none;
     }
+
+    .demo-notice {
+        background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.5); 
+        color: #fbbf24; padding: 10px; border-radius: 8px; font-size: 12px; margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
@@ -111,14 +116,18 @@
   <div class="view-container active" id="vistaLoader" style="padding-top: 40vh;">
     <div class="loader-box"></div>
     <h2 class="title-brand" style="font-size: 24px;">ELEMENTA BOX</h2>
-    <div id="loaderMsg" style="color: var(--text-muted); font-size: 14px; margin-top: 10px;">Conectando...</div>
+    <div id="loaderMsg" style="color: var(--text-muted); font-size: 14px; margin-top: 10px;">Cargando entorno demo...</div>
   </div>
 
   <!-- LOGIN -->
-  <div class="view-container" id="vistaLogin" style="padding-top: 15vh;">
+  <div class="view-container" id="vistaLogin" style="padding-top: 10vh;">
     <h1 class="title-brand" style="font-size: 42px; margin-bottom: 5px;">ELEMENTA</h1>
-    <p style="color: var(--text-muted); margin-bottom: 30px; letter-spacing: 2px;">PERFORMANCE TRACKER</p>
+    <p style="color: var(--text-muted); margin-bottom: 20px; letter-spacing: 2px;">PERFORMANCE TRACKER</p>
     
+    <div class="demo-notice">
+      <b>MODO DEMO:</b> Usa <b>LAURA GARCIA</b> (Clave: BOX1) o <b>YEISON HERRERA</b> (Clave: BOX2).
+    </div>
+
     <div class="input-group">
       <label>ATLETA (NOMBRE REGISTRADO)</label>
       <input type="text" list="listaNombres" id="loginNombre" placeholder="Buscar nombre..." autocomplete="off">
@@ -130,6 +139,30 @@
     </div>
 
     <button class="btn" onclick="iniciarSesion()">ENTRAR AL BOX</button>
+    <div style="margin-top: 20px;">
+      <span class="link" onclick="cambiarVista('vistaRegistro')">¿Nuevo atleta? Regístrate aquí</span>
+    </div>
+  </div>
+
+  <!-- REGISTRO -->
+  <div class="view-container" id="vistaRegistro" style="padding-top: 10vh;">
+    <h1 class="title-brand" style="font-size: 28px;">NUEVO ATLETA</h1>
+    <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 13px;">Únete a la comunidad Elementa Box (Demo).</p>
+    
+    <div class="input-group"><label>NOMBRE COMPLETO</label><input type="text" id="regNombre" placeholder="Tus nombres y apellidos"></div>
+    <div class="input-group"><label>DOCUMENTO DE IDENTIDAD</label><input type="text" id="regCedula" placeholder="Número de documento"></div>
+    <div class="input-group"><label>CORREO ELECTRÓNICO</label><input type="email" id="regCorreo" placeholder="ejemplo@correo.com"></div>
+    <div class="input-group" style="display:none;"><input type="text" id="regCargo" value="ATLETA"></div>
+    <div class="input-group"><label>NIVEL DE EXPERIENCIA</label>
+      <select id="regProyecto">
+        <option value="PRINCIPIANTE">Principiante (Scaled)</option>
+        <option value="INTERMEDIO">Intermedio (Rx)</option>
+        <option value="AVANZADO">Avanzado (Elite)</option>
+      </select>
+    </div>
+
+    <button class="btn" onclick="registrarUsuario()">ENVIAR SOLICITUD</button>
+    <button class="btn btn-outline" onclick="cambiarVista('vistaLogin')">VOLVER</button>
   </div>
 
   <!-- DASHBOARD PRINCIPAL -->
@@ -156,7 +189,7 @@
   <!-- RUTINA / REGISTRO DE MARCA -->
   <div class="view-container" id="vistaRutina">
     <h2 style="text-align: left; font-size: 20px; margin-bottom: 5px;">REGISTRO DE MARCA</h2>
-    <p style="text-align: left; color: var(--text-muted); font-size: 13px; margin-bottom: 20px; margin-top:0;">Guarda tu progreso y gana puntos reales.</p>
+    <p style="text-align: left; color: var(--text-muted); font-size: 13px; margin-bottom: 20px; margin-top:0;">Guarda tu progreso y gana puntos.</p>
 
     <div class="input-group">
       <label>CATEGORÍA DEL EJERCICIO</label>
@@ -185,7 +218,7 @@
   <!-- LEADERBOARD -->
   <div class="view-container" id="vistaLeaderboard">
     <h2 style="font-size: 24px; color: var(--gold); margin-bottom: 5px;">TOP ATLETAS</h2>
-    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">Los puntajes reales del Box.</p>
+    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">Leaderboard Simulado.</p>
 
     <div class="leaderboard-list" id="listaLeaderboard">
       <!-- Se llena por JS -->
@@ -195,52 +228,93 @@
   </div>
 
   <div style="position: relative; margin-top: 25px; width: 100%; text-align: center; font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 4px; text-transform: uppercase; font-weight: 700; padding-bottom: 20px;">
-    Desarrollado para ⚡ Elementa Box ⚡
+    Desarrollado para ⚡ Elementa Box (Demo) ⚡
   </div>
 
   <script>
     // =========================================================
-    // PEGA AQUÍ TU ÚLTIMA URL DESPUÉS DE LA NUEVA IMPLEMENTACIÓN
+    // BASE DE DATOS SIMULADA (LOCAL MOCK)
     // =========================================================
-    const URL_APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbwvf_1k7tYp0OEME00nrLQjoMiJzYECQyJuSkvw8Q81AIauyJ3TA2wwvFWZa2PjRY6A/exec';
     
-    // DATOS HARDCODEADOS PARA EL BOX
     const GYM_DATA = {
       "HALTEROFILIA": ["Snatch (Arranque)", "Clean & Jerk (Envión)", "Squat Clean", "Power Snatch", "Overhead Squat", "Front Squat", "Back Squat", "Deadlift (Peso Muerto)"],
       "GIMNASIA": ["Pull-ups (Dominadas)", "Chest to Bar", "Muscle Up (Barra)", "Muscle Up (Anillas)", "Toes to Bar", "Handstand Walk", "HSPU"],
       "METCON / CARDIO": ["Remo (Row)", "Assault Bike", "Correr (Run)", "Double Unders", "Burpees", "Box Jumps", "Wall Balls"]
     };
 
+    const USUARIOS_DEFECTO = [
+      { cedula: "1053873375", nombre: "LAURA GARCIA", password: "BOX1", cargo: "ATLETA", puntos: 1520 },
+      { cedula: "1053864506", nombre: "YEISON HERRERA", password: "BOX2", cargo: "COACH", puntos: 1450 },
+      { cedula: "1111111111", nombre: "DANIELA V", password: "BOX3", cargo: "ATLETA", puntos: 950 }
+    ];
+
+    // Cargar datos de LocalStorage o usar los de defecto
+    let mockDB = JSON.parse(localStorage.getItem('elementa_mock_db')) || USUARIOS_DEFECTO;
+
+    function guardarEnDB() {
+      localStorage.setItem('elementa_mock_db', JSON.stringify(mockDB));
+    }
+
     let usuarioActual = {};
     let backendLeaderboard = []; 
 
-    // COMUNICACIÓN BLINDADA CONTRA ERRORES
+    // --- MOCK DEL BACKEND (REEMPLAZA AL FETCH DE GOOGLE SHEETS) ---
     async function peticionBackend(payload) {
-        try {
-            const response = await fetch(URL_APPS_SCRIPT, { 
-                method: 'POST', 
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(payload) 
-            });
-            const text = await response.text();
-            try {
-                return JSON.parse(text);
-            } catch (err) {
-                return { estado: "error", mensaje: "Google bloqueó la conexión. ¿Aseguraste poner 'Cualquier persona' en la nueva implementación?" };
-            }
-        } catch (error) {
-            return { estado: "error", mensaje: "Error de red. Asegúrate de NO abrir el archivo dando doble clic desde el escritorio, ábrelo desde GitHub Pages." };
+        // Simulamos el tiempo de respuesta de internet (0.8 segundos)
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        switch(payload.action) {
+            case 'init':
+                const leaderboard = mockDB.map(u => ({ nombre: u.nombre, puntos: u.puntos }));
+                return { estado: 'exito', leaderboard: leaderboard };
+
+            case 'login':
+                const user = mockDB.find(u => u.nombre === payload.nombre.toUpperCase());
+                if (!user) return { estado: 'error', mensaje: 'Atleta no encontrado en la Demo.' };
+                if (user.password !== payload.password) return { estado: 'error', mensaje: 'Contraseña incorrecta.' };
+                return { estado: 'exito', nombre: user.nombre, cedula: user.cedula, cargo: user.cargo, puntos: user.puntos };
+
+            case 'register':
+                const exists = mockDB.find(u => u.cedula === payload.cedula);
+                if (exists) return { estado: 'error', mensaje: 'El documento ya está registrado.' };
+                
+                // Agregamos al usuario a la BD simulada con una clave autogenerada
+                const randomPass = "BOX" + Math.floor(100 + Math.random() * 900);
+                mockDB.push({
+                    cedula: payload.cedula,
+                    nombre: payload.nombre.toUpperCase(),
+                    password: randomPass,
+                    cargo: 'ATLETA',
+                    puntos: 0
+                });
+                guardarEnDB();
+                
+                // Excepción para la demo: le mostramos la clave para que la pueda probar
+                return { estado: 'exito', mensaje: `¡Registrado! En esta demo tu clave generada es: ${randomPass}` };
+
+            case 'save_pr':
+                const prUser = mockDB.find(u => u.cedula === payload.cedula);
+                if (!prUser) return { estado: 'error', mensaje: 'Usuario no encontrado.' };
+                prUser.puntos += 50; // Sumar puntos
+                guardarEnDB();
+                return { estado: 'exito', nuevosPuntos: prUser.puntos };
+
+            default:
+                return { estado: 'error', mensaje: 'Acción no reconocida en la demo.' };
         }
     }
 
+    // =========================================================
+    // LÓGICA DE LA APLICACIÓN
+    // =========================================================
+
     window.addEventListener('DOMContentLoaded', async () => {
-        mostrarLoader("Cargando base de datos...");
+        mostrarLoader("Cargando entorno demo...");
         const result = await peticionBackend({ action: 'init' });
         
         if (result.estado === 'exito') {
             backendLeaderboard = result.leaderboard || [];
             
-            // Protección contra errores nulos (innerHTML)
             const datalist = document.getElementById('listaNombres');
             if(datalist) {
                 datalist.innerHTML = '';
@@ -277,8 +351,8 @@
         const badge = document.getElementById('badgeModulo');
         if(badge) {
             badge.style.display = 'block';
-            badge.innerText = '🏋️ ELEMENTA';
-            badge.style.background = 'linear-gradient(135deg, #ff4500, #cc3700)';
+            badge.innerText = (res.cargo && res.cargo.includes('COACH')) ? '🛡️ COACH' : '🏋️ ELEMENTA';
+            badge.style.background = (res.cargo && res.cargo.includes('COACH')) ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 'linear-gradient(135deg, #ff4500, #cc3700)';
         }
         
         const puntosObj = document.getElementById('dashPuntos');
@@ -293,6 +367,32 @@
           alert("❌ " + res.mensaje);
           ocultarLoader();
       }
+    }
+
+    async function registrarUsuario() {
+        const cedula = document.getElementById('regCedula').value.trim();
+        const nombre = document.getElementById('regNombre').value.trim().toUpperCase();
+        
+        if(!cedula || !nombre) return alert("Documento y Nombre son obligatorios.");
+
+        mostrarLoader("Registrando...");
+        const res = await peticionBackend({ action: 'register', cedula: cedula, nombre: nombre });
+        
+        ocultarLoader();
+        if(res.estado === 'exito') {
+            alert(res.mensaje); // En el demo mostramos la clave generada
+            
+            // Actualizar la lista desplegable de nombres para el nuevo usuario
+            const datalist = document.getElementById('listaNombres');
+            if(datalist) {
+                let option = document.createElement('option');
+                option.value = nombre;
+                datalist.appendChild(option);
+            }
+            cambiarVista('vistaLogin');
+        } else {
+            alert("❌ " + res.mensaje);
+        }
     }
 
     function prepararRutina() {
@@ -339,7 +439,7 @@
             return alert("Selecciona la categoría, el movimiento y anota tu resultado.");
         }
 
-        mostrarLoader("Guardando y sumando puntos...");
+        mostrarLoader("Guardando Demo...");
         
         const resEnvio = await peticionBackend({ 
             action: 'save_pr', 
@@ -366,19 +466,22 @@
             const divExito = document.createElement('div');
             divExito.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100vh; background:rgba(0,0,0,0.9); z-index:999; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px;";
             divExito.innerHTML = `
-                <h2 style="color:#10b981; font-size: 24px;">¡MARCA REGISTRADA!</h2>
-                <p style="color:#9ca3af; text-align:center;">Se han sumado 50 puntos a tu perfil.</p>
+                <h2 style="color:#10b981; font-size: 24px;">¡MARCA GUARDADA!</h2>
+                <p style="color:#9ca3af; text-align:center;">Se han sumado 50 puntos a tu perfil Demo.</p>
                 ${btnWhatsAppHTML}
                 <button class="btn" style="max-width: 300px; margin-top: 20px;" onclick="this.parentElement.remove(); cambiarVista('vistaDashboard');">VOLVER AL DASHBOARD</button>
             `;
             document.body.appendChild(divExito);
             
-            let userInLb = backendLeaderboard.find(u => u.nombre === usuarioActual.nombre);
+            // Actualizar leaderboard backend simulado localmente para este usuario
+            let userInLb = mockDB.find(u => u.cedula === usuarioActual.cedula);
             if (userInLb) userInLb.puntos = usuarioActual.puntos;
+            // Refrescar leaderboard local
+            backendLeaderboard = mockDB.map(u => ({ nombre: u.nombre, puntos: u.puntos }));
 
         } else {
             ocultarLoader();
-            alert("❌ Hubo un error guardando tu registro: " + resEnvio.mensaje); 
+            alert("❌ Hubo un error en la Demo: " + resEnvio.mensaje); 
         }
     }
 
