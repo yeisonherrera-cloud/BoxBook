@@ -3,498 +3,468 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Plataforma de Registro y Captura</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <title>Elementa Box | Tracking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    :root { --primary: #00f260; --secondary: #0575e6; --bg-dark: #04090b; --card-bg: rgba(10, 15, 18, 0.75); }
-    body { margin: 0; padding: 20px; background: var(--bg-dark); font-family: 'Inter', sans-serif; color: white; text-align: center; overflow-y: auto; overflow-x: hidden; position: relative; scrollbar-width: none; -ms-overflow-style: none; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;}
-    body::-webkit-scrollbar { display: none; }
-    
-    .cyber-grid { position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background-image: linear-gradient(rgba(0, 242, 96, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 242, 96, 0.15) 1px, transparent 1px); background-size: 40px 40px; transform: perspective(500px) rotateX(60deg); animation: moveGrid 3s linear infinite; z-index: 0; opacity: 0.6; pointer-events: none; }
-    @keyframes moveGrid { 0% { transform: perspective(500px) rotateX(60deg) translateY(0); } 100% { transform: perspective(500px) rotateX(60deg) translateY(40px); } }
-    body::after { content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%); background-size: 100% 4px; z-index: 100; pointer-events: none; }
-    .ambient-light { position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 30% 40%, rgba(5, 117, 230, 0.15) 0%, transparent 40%), radial-gradient(circle at 70% 60%, rgba(0, 242, 96, 0.1) 0%, transparent 40%); animation: rotateGlow 20s linear infinite; z-index: 1; pointer-events: none; }
-    @keyframes rotateGlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    
-    @keyframes fadeSlideUp { 0% { opacity: 0; transform: translateY(20px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
-    .card { width: 100%; max-width: 420px; position: relative; z-index: 10; background: var(--card-bg); padding: 35px 25px; border-radius: 20px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1); animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; border: 1px solid rgba(0, 242, 96, 0.1); box-sizing: border-box; display: none; margin-bottom: 20px;}
-    .card.active { display: block; }
-    .card.is-processing { border-color: rgba(0, 242, 96, 0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 40px rgba(0, 242, 96, 0.08), inset 0 1px 0 rgba(255,255,255,0.2); }
-    
-    .input-group { margin-bottom: 18px; text-align: left; }
-    label { display: block; font-size: 11px; font-weight: 700; color: #a0aec0; margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.5px;}
-    
-    input[type="text"], input[type="password"], input[type="email"], input:not([type]), select, textarea { 
-      width: 100%; padding: 14px; background: rgba(0, 0, 0, 0.6); 
-      border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; 
-      box-sizing: border-box; font-size: 14px; 
-      color: #ffffff !important; 
-      font-family: 'Inter', sans-serif; transition: all 0.3s; 
-      text-transform: uppercase;
+    :root { 
+      --primary: #ff4500; /* Naranja Elementa */
+      --primary-dark: #cc3700;
+      --secondary: #1e1e1e; 
+      --bg-dark: #0a0a0a; 
+      --text-main: #ffffff;
+      --text-muted: #9ca3af;
+      --card-bg: rgba(30, 30, 30, 0.85);
+      --success: #10b981;
+      --gold: #fbbf24;
     }
-    input[type="text"], input[type="password"], input[type="email"], input:not([type]), select {
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    textarea { text-transform: none; resize: vertical; }
     
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 242, 96, 0.2); background: rgba(0, 0, 0, 0.8); }
-    select option { background: #0f172a; color: white; }
-    input[type="password"] { text-transform: none; }
-    input:read-only { background: rgba(255, 255, 255, 0.03); color: #94a3b8 !important; border-color: rgba(255, 255, 255, 0.05); cursor: not-allowed; }
-
-    input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active{
-        -webkit-box-shadow: 0 0 0 30px #080d10 inset !important; 
-        -webkit-text-fill-color: #ffffff !important; 
-        transition: background-color 5000s ease-in-out 0s;
+    body { 
+      margin: 0; padding: 0; 
+      background-color: var(--bg-dark); 
+      background-image: radial-gradient(circle at top right, rgba(255, 69, 0, 0.15) 0%, transparent 40%), radial-gradient(circle at bottom left, rgba(255, 69, 0, 0.1) 0%, transparent 40%);
+      font-family: 'Roboto', sans-serif; 
+      color: var(--text-main); 
+      text-align: center; 
+      overflow-y: auto; 
+      overflow-x: hidden; 
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
     }
 
-    .btn-action { width: 100%; position: relative; overflow: hidden; margin-top: 10px; padding: 16px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; font-family: 'Inter', sans-serif; cursor: pointer; box-shadow: 0 4px 15px rgba(5, 117, 230, 0.3); transition: all 0.3s ease; text-transform: uppercase; }
-    .btn-action:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(5, 117, 230, 0.5); }
-    .btn-action:active { transform: scale(0.98); }
-    
-    .btn-foto { background: rgba(5, 150, 105, 0.1); border: 1px solid #059669; color: #34d399; }
-    .btn-foto:hover { background: #059669; color: white; }
-    .btn-video { background: rgba(124, 58, 237, 0.1); border: 1px solid #7c3aed; color: #a78bfa; }
-    .btn-video:hover { background: #7c3aed; color: white; }
-    .btn-error { background: linear-gradient(135deg, #ff416c, #ff4b2b); box-shadow: 0 4px 15px rgba(255, 75, 43, 0.3); }
-    .btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); }
-    .btn-info { background: linear-gradient(135deg, #0575e6, #021b79); box-shadow: 0 4px 15px rgba(5, 117, 230, 0.3); }
-    .btn-whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
-    
-    .btn-audio-grabando { background: linear-gradient(135deg, #ff416c, #ff4b2b); animation: pulseRecord 1.5s infinite; }
-    @keyframes pulseRecord { 0% { box-shadow: 0 0 0 0 rgba(255, 65, 108, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 65, 108, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 65, 108, 0); } }
+    /* Animaciones */
+    @keyframes fadeSlideUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+    @keyframes pulseGlow { 0% { box-shadow: 0 0 10px rgba(255,69,0,0.2); } 100% { box-shadow: 0 0 25px rgba(255,69,0,0.6); } }
 
-    .logo-wrapper { position: relative; display: inline-block; margin-bottom: 25px; }
-    .logo-wrapper img { width: 150px; border-radius: 12px; display: block; animation: float 4s ease-in-out infinite, pulseGlow 3s alternate infinite; }
-    .matrix-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 12px; overflow: hidden; opacity: 0; z-index: 15; background: rgba(0, 15, 5, 0.9); box-shadow: inset 0 0 20px rgba(0, 242, 96, 0.5); pointer-events: none; }
-    .is-processing .matrix-overlay { animation: matrixPulse 4.5s infinite; }
-    .matrix-overlay::before, .matrix-overlay::after { content: "10100110 01100101 10101011 00101001 10010100 01110011 11010101 01010100 11001100 10101011 01100101 10101011 00101001 10010100 01110011 11010101 01010100 11001100 10101011 01100101 10101011 00101001 10010100 01110011 11010101 01010100 11001100 10101011 01100101 10101011 00101001 10010100 01110011 11010101 01010100 11001100 10101011 01100101"; position: absolute; top: -100%; left: 0; width: 100%; color: #00ff41; font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 12px; word-break: break-all; animation: matrixRain 3s linear infinite; }
-    @keyframes matrixPulse { 0%, 15% { opacity: 0; } 40%, 60% { opacity: 1; } 85%, 100% { opacity: 0; } }
-    @keyframes matrixRain { 0% { top: -50%; } 100% { top: 0%; } }
-    .is-processing img { animation: float 4s ease-in-out infinite, glitchMatrixExtremo 4.5s infinite; }
-    @keyframes glitchMatrixExtremo { 0%, 35% { opacity: 1; transform: scale(1) translate(0); filter: none; } 36% { transform: translate(-4px, 2px); } 38% { transform: translate(4px, -2px); } 40%, 60% { opacity: 0; transform: scale(0.95); } 82% { transform: translate(-3px, 1px); } 84% { transform: translate(3px, -1px); } 86%, 100% { opacity: 1; transform: scale(1) translate(0); } }
-    
-    .message { margin: 15px 0; min-height: 20px; font-size: 14.5px; color: #00f260; font-family: 'JetBrains Mono', monospace; font-weight: 500; text-shadow: 0 0 5px rgba(0, 242, 96, 0.4); }
-    .progress-container { width: 100%; background: rgba(0,0,0,0.6); border-radius: 50px; overflow: hidden; height: 22px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.1); position: relative; }
-    .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--primary), var(--secondary)); text-align: right; padding-right: 12px; box-sizing: border-box; line-height: 22px; font-size: 12px; font-weight: 700; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5); transition: width 0.8s; }
+    /* Contenedor Principal (Cards) */
+    .view-container { 
+      width: 100%; max-width: 450px; 
+      padding: 20px; box-sizing: border-box; 
+      display: none; 
+      animation: fadeSlideUp 0.5s ease-out forwards;
+      margin-bottom: 20px;
+    }
+    .view-container.active { display: block; }
 
-    h2 { margin-top: 0; font-size: 22px; font-weight: 700; background: -webkit-linear-gradient(#fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .text-sm { font-size: 12px; color: #94a3b8; margin-top: 15px; display: block; }
-    .link { color: var(--primary); cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
-    #cronometro { font-family: 'JetBrains Mono', monospace; font-size: 24px; color: #ff4b2b; text-shadow: 0 0 10px rgba(255, 75, 43, 0.5); margin: 10px 0; display: none; }
+    /* Tipografía Box */
+    h1, h2, h3 { font-family: 'Montserrat', sans-serif; font-weight: 900; text-transform: uppercase; margin-top: 0; letter-spacing: -0.5px;}
+    .title-brand { font-size: 32px; font-style: italic; color: var(--text-main); text-shadow: 2px 2px 0px var(--primary); margin-bottom: 5px;}
+    
+    /* Inputs y Formularios */
+    .input-group { margin-bottom: 16px; text-align: left; }
+    label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px;}
+    input, select, textarea { 
+      width: 100%; padding: 14px; 
+      background: rgba(0, 0, 0, 0.5); 
+      border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; 
+      box-sizing: border-box; font-size: 15px; color: white; 
+      font-family: 'Roboto', sans-serif; transition: all 0.3s;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); background: rgba(0, 0, 0, 0.8); }
+    
+    /* Botones */
+    .btn { 
+      width: 100%; padding: 16px; margin-top: 10px;
+      background: var(--primary); color: white; 
+      border: none; border-radius: 8px; 
+      font-size: 16px; font-family: 'Montserrat', sans-serif; font-weight: 900; font-style: italic; text-transform: uppercase; 
+      cursor: pointer; box-shadow: 0 4px 15px rgba(255, 69, 0, 0.3); transition: all 0.2s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-outline { background: transparent; border: 2px solid rgba(255,255,255,0.2); box-shadow: none; }
+    .btn-media { background: var(--secondary); border: 1px solid rgba(255,255,255,0.1); margin-top: 0; display: flex; align-items: center; justify-content: center; gap: 8px;}
+    .btn-media:hover { border-color: var(--primary); }
+
+    /* Dashboard & Gamificación */
+    .dashboard-header { background: var(--card-bg); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); text-align: left; position: relative;}
+    .user-greeting { font-size: 14px; color: var(--text-muted); }
+    .user-name { font-size: 22px; font-family: 'Montserrat'; font-weight: 800; margin: 4px 0 15px 0;}
+    
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat-box { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.05);}
+    .stat-value { font-size: 24px; font-weight: 900; font-family: 'Montserrat'; color: var(--primary); display: flex; align-items: center; justify-content: center; gap: 5px;}
+    .stat-value.gold { color: var(--gold); }
+    .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; display: block;}
+
+    /* Mini Video Player */
+    .video-container { width: 100%; height: 180px; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 20px; position: relative; border: 1px solid rgba(255,255,255,0.1); display: none;}
+    .video-container video, .video-container img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8;}
+    .video-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); text-align: left; box-sizing: border-box;}
+    .video-title { font-family: 'Montserrat'; font-weight: 800; font-size: 16px; color: white; display: flex; align-items: center; gap: 6px;}
+
+    /* Leaderboard */
+    .leaderboard-list { background: var(--card-bg); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);}
+    .leaderboard-item { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .leaderboard-item:last-child { border-bottom: none; }
+    .rank { font-size: 18px; font-weight: 900; font-family: 'Montserrat'; width: 30px; color: var(--text-muted);}
+    .rank-1 { color: var(--gold); font-size: 22px;}
+    .rank-2 { color: #e5e7eb; }
+    .rank-3 { color: #d97706; }
+    .lb-user { flex: 1; text-align: left; padding-left: 10px; font-weight: 700; font-size: 15px;}
+    .lb-points { font-weight: 900; font-family: 'Montserrat'; color: var(--primary); }
+
+    /* Nav inferior rápida */
+    .quick-nav { display: flex; gap: 10px; margin-top: 20px;}
+    .quick-nav .btn { font-size: 13px; padding: 12px; }
+
+    /* Utilidades */
+    .link { color: var(--primary); cursor: pointer; text-decoration: underline; font-size: 13px;}
     input[type="file"] { display: none !important; }
-    
-    .queue-container { margin-top: 25px; padding: 20px; background: rgba(0,0,0,0.4); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.2); text-align: left;}
-    .queue-item { background: rgba(255,255,255,0.05); padding: 10px 12px; border-radius: 8px; font-size: 13px; font-family: 'JetBrains Mono', monospace; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--primary);}
-    .queue-item.foto { border-left-color: #34d399; }
-    .queue-item.video { border-left-color: #a78bfa; }
-    .queue-item.audio { border-left-color: #ff4b2b; }
-    .btn-remove { background: none; border: none; color: #ff4b2b; cursor: pointer; font-size: 18px; font-weight: bold; }
-    
-    .footer { position: relative; margin-top: 25px; width: 100%; text-align: center; font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 4px; text-transform: uppercase; font-weight: 700; z-index: 10; padding-bottom: 20px;}
+    .queue-container { margin-top: 20px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; text-align: left; border: 1px dashed rgba(255,255,255,0.2);}
+    .queue-item { font-size: 13px; color: var(--text-muted); margin-bottom: 5px; display: flex; justify-content: space-between;}
+    .btn-remove { background: none; border: none; color: var(--primary); cursor: pointer; font-weight: bold; }
 
-    .modulo-badge {
-        position: absolute; 
-        top: 20px; 
-        right: 20px; 
-        color: white; 
-        padding: 6px 12px; 
-        border-radius: 12px; 
-        font-size: 11px; 
-        font-weight: 800; 
-        letter-spacing: 1px; 
-        box-shadow: 0 4px 15px rgba(0,0,0,0.4); 
-        border: 1px solid rgba(255,255,255,0.2); 
-        z-index: 100; 
-        display: none;
+    /* Loader */
+    .loader-box { width: 60px; height: 60px; border: 5px solid rgba(255,69,0,0.2); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;}
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Animación Puntos */
+    .points-animation {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5);
+      font-family: 'Montserrat'; font-size: 48px; font-weight: 900; color: var(--gold);
+      text-shadow: 0 10px 30px rgba(251, 191, 36, 0.5);
+      opacity: 0; pointer-events: none; z-index: 9999;
+      animation: popPoints 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
+    @keyframes popPoints { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); } 20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); } 80% { opacity: 1; transform: translate(-50%, -80%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -100%) scale(0.8); } }
+
   </style>
 </head>
 <body>
-  <div class="cyber-grid"></div>
-  <div class="ambient-light"></div>
 
-  <div class="card active" id="vistaLoader">
-    <div class="logo-wrapper">
-      <img src="https://lh3.googleusercontent.com/d/1TsBi-7jTXIUG4j9uNDBDu5gwxoTrHUq7" onerror="this.style.display='none'">
-      <div class="matrix-overlay"></div>
-    </div>
-    <h2 id="loaderTitle">Iniciando Sistema</h2>
-    <div class="message" id="message" data-current="">Conectando con base de datos...</div>
-    <div class="progress-container"><div class="progress-bar" id="progressBar">0%</div></div>
-    <button id="btnErrorLoader" class="btn-action btn-error" style="display:none;" onclick="volverDeError()">Cerrar y Revisar</button>
-    <button id="btnExitoLoader" class="btn-action" style="display:none; background: linear-gradient(135deg, #00f260, #0575e6);" onclick="volverDeExito()">Continuar</button>
+  <!-- PANTALLA DE CARGA -->
+  <div class="view-container active" id="vistaLoader" style="padding-top: 40vh;">
+    <div class="loader-box"></div>
+    <h2 class="title-brand" style="font-size: 24px;">ELEMENTA BOX</h2>
+    <div id="loaderMsg" style="color: var(--text-muted); font-size: 14px; margin-top: 10px; font-family: 'JetBrains Mono', monospace;">Conectando al Box...</div>
   </div>
 
-  <div class="card" id="vistaLogin">
-    <h2>Sistema de Control</h2>
-    <p style="color: #94a3b8; font-size: 13px; margin-bottom: 25px;">Identificación de Personal Autorizado</p>
+  <!-- LOGIN -->
+  <div class="view-container" id="vistaLogin" style="padding-top: 15vh;">
+    <h1 class="title-brand" style="font-size: 42px; margin-bottom: 5px;">ELEMENTA</h1>
+    <p style="color: var(--text-muted); margin-bottom: 30px; letter-spacing: 2px;">PERFORMANCE TRACKER</p>
     
     <div class="input-group">
-      <label>USUARIO</label>
-      <input type="text" list="listaNombres" id="loginNombre" placeholder="Buscar nombre..." autocomplete="off">
-      <datalist id="listaNombres"></datalist>
+      <label>ATLETA (NOMBRE REGISTRADO)</label>
+      <input type="text" id="loginNombre" placeholder="Buscar nombre..." autocomplete="off">
     </div>
     <div class="input-group">
       <label>CONTRASEÑA</label>
       <input type="password" id="loginPassword" placeholder="••••••••">
     </div>
 
-    <button class="btn-action" onclick="iniciarSesion()">ACCEDER AL SISTEMA</button>
-    <span class="text-sm">¿No tienes cuenta? <span class="link" onclick="cambiarVista('vistaRegistro')">Solicitar Registro</span></span>
+    <button class="btn" onclick="iniciarSesion()">ENTRAR AL BOX</button>
+    <div style="margin-top: 20px;">
+      <span class="link" onclick="cambiarVista('vistaRegistro')">¿Nuevo atleta? Regístrate aquí</span>
+    </div>
   </div>
 
-  <div class="card" id="vistaRegistro">
-    <h2>Nuevo Personal</h2>
-    <p style="color: #94a3b8; font-size: 13px; margin-bottom: 20px;">Ingrese sus datos. El sistema validará su registro.</p>
+  <!-- REGISTRO -->
+  <div class="view-container" id="vistaRegistro" style="padding-top: 10vh;">
+    <h1 class="title-brand" style="font-size: 28px;">NUEVO ATLETA</h1>
+    <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 13px;">Únete a la comunidad Elementa Box.</p>
     
-    <div class="input-group">
-      <label>NOMBRE COMPLETO</label>
-      <input type="text" id="regNombre" placeholder="Nombres y Apellidos">
-    </div>
-    <div class="input-group">
-      <label>CÉDULA</label>
-      <input type="text" id="regCedula" placeholder="Número de documento">
-    </div>
-    <div class="input-group">
-      <label>CORREO ELECTRÓNICO</label>
-      <input type="email" id="regCorreo" placeholder="ejemplo@galias.com.co">
-    </div>
-    <div class="input-group">
-      <label>CARGO</label>
-      <input type="text" id="regCargo" placeholder="Ej. Maestro de Obra">
-    </div>
-    <div class="input-group">
-      <label>PROYECTO ASIGNADO</label>
-      <select id="regProyecto"></select>
+    <div class="input-group"><label>NOMBRE COMPLETO</label><input type="text" id="regNombre" placeholder="Tus nombres y apellidos"></div>
+    <div class="input-group"><label>DOCUMENTO DE IDENTIDAD</label><input type="text" id="regCedula" placeholder="Número de documento"></div>
+    <div class="input-group"><label>CORREO ELECTRÓNICO</label><input type="email" id="regCorreo" placeholder="ejemplo@correo.com"></div>
+    <div class="input-group" style="display:none;"><input type="text" id="regCargo" value="ATLETA"></div>
+    <div class="input-group"><label>NIVEL DE EXPERIENCIA</label>
+      <select id="regProyecto">
+        <option value="PRINCIPIANTE">Principiante (Scaled)</option>
+        <option value="INTERMEDIO">Intermedio (Rx)</option>
+        <option value="AVANZADO">Avanzado (Elite)</option>
+      </select>
     </div>
 
-    <button class="btn-action" onclick="registrarUsuario()">ENVIAR SOLICITUD</button>
-    <button class="btn-action" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); box-shadow: none;" onclick="cambiarVista('vistaLogin')">Volver al Inicio</button>
+    <button class="btn" onclick="registrarUsuario()">ENVIAR SOLICITUD</button>
+    <button class="btn btn-outline" onclick="cambiarVista('vistaLogin')">VOLVER</button>
   </div>
 
-  <div class="card" id="vistaReasignar">
-    <h2 style="color: #f59e0b;">Cuenta Existente</h2>
-    <p style="color: #cbd5e1; font-size: 14px; margin-bottom: 20px; line-height: 1.5;">
-      Ya existe una cuenta en el sistema vinculada a ese número de documento. <br><br>
-      ¿Deseas solicitarle al administrador que te <b>reasigne una contraseña</b>?
-    </p>
-    
-    <div class="input-group">
-      <label>NUEVO CORREO ELECTRÓNICO (Opcional)</label>
-      <input type="email" id="reasignarCorreo" placeholder="Llenar solo si tu correo cambió">
-    </div>
-
-    <button class="btn-action btn-warning" onclick="enviarReasignacion()">SÍ, SOLICITAR CONTRASEÑA</button>
-    <button class="btn-action" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); box-shadow: none;" onclick="cambiarVista('vistaRegistro')">CANCELAR (ME EQUIVOQUÉ)</button>
-  </div>
-
-  <div class="card" id="vistaApp" style="max-width: 480px;">
-    <div id="badgeModulo" class="modulo-badge">OBRA</div>
-    
-    <h2>Módulo de Reporte</h2>
-    <div style="background: rgba(0,242,96,0.1); padding: 12px; border-radius: 10px; margin-bottom: 20px; text-align: left; border-left: 3px solid var(--primary);">
-        <span id="infoUsuarioNombre" style="font-size: 15px; font-weight: 700; color: white;">NOMBRE</span><br>
-        <span id="infoUsuarioCedula" style="font-size: 12px; color: #a0aec0; font-family: 'JetBrains Mono';">CC: 000000000</span><br>
-        <span id="infoUsuarioCorreo" style="font-size: 12px; color: #a0aec0; font-family: 'JetBrains Mono';">correo@empresa.com</span>
-    </div>
-    
-    <div class="input-group">
-      <label>PROYECTO ACTUAL</label>
-      <select id="appProyecto" onchange="actualizarFrentes()"></select>
-    </div>
-
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-        <div class="input-group">
-          <label>FRENTE</label>
-          <select id="appFrente"><option value="">Seleccione...</option></select>
+  <!-- DASHBOARD PRINCIPAL -->
+  <div class="view-container" id="vistaDashboard">
+    <div class="dashboard-header">
+      <div class="user-greeting">Hola, atleta</div>
+      <div class="user-name" id="dashNombre">NOMBRE ATLETA</div>
+      
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-value" id="dashRacha">🔥 0</div>
+          <div class="stat-label">Días de Racha</div>
         </div>
-        <div class="input-group">
-          <label>UBICACIÓN</label>
-          <input type="text" id="appUbicacion" placeholder="Ej. Zanja Norte">
+        <div class="stat-box">
+          <div class="stat-value gold" id="dashPuntos">🏆 0</div>
+          <div class="stat-label">Puntos Totales</div>
         </div>
+      </div>
     </div>
 
-    <div class="input-group">
-      <label>DESCRIPCIÓN / OBSERVACIONES</label>
-      <textarea id="appDescripcion" rows="3" placeholder="Detalles de la labor, novedades, observaciones..."></textarea>
-    </div>
-
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-        <input type="file" id="inputFoto" accept="image/*" capture="environment">
-        <button class="btn-action btn-foto" onclick="document.getElementById('inputFoto').click()">📸 TOMAR FOTO</button>
-        
-        <input type="file" id="inputVideo" accept="video/*" capture="environment">
-        <button class="btn-action btn-video" onclick="document.getElementById('inputVideo').click()">🎥 GRABAR VIDEO</button>
-    </div>
-    <button id="btnGrabarAudio" class="btn-action">🎤 GRABAR AUDIO</button>
-    <div id="cronometro">00:00</div>
-
-    <div class="queue-container">
-        <label style="color:white; margin-bottom: 10px;">ARCHIVOS EN ESPERA (<span id="queueCount">0</span>)</label>
-        <div id="queueList" style="font-size: 13px; color: #94a3b8; font-style: italic;">No hay archivos pendientes.</div>
-        <button id="btnEnviarReporte" class="btn-action" style="margin-top: 20px; display: none;" onclick="enviarReporteEnCola()">🚀 CONFIRMAR Y ENVIAR</button>
-    </div>
-
-    <div style="margin-top: 25px; text-align: center;">
-        <span class="link text-sm" style="color: #ff6b6b; margin-top:0;" onclick="cerrarSesion()">Cerrar Sesión</span>
+    <button class="btn" onclick="prepararRutina()" style="padding: 20px; font-size: 18px; margin-bottom: 15px;">🏋️ REGISTRAR MARCA (PR)</button>
+    
+    <div class="quick-nav">
+      <button class="btn btn-outline" onclick="mostrarLeaderboard()" style="flex:1;">🏆 LEADERBOARD</button>
+      <button class="btn btn-outline" onclick="cerrarSesion()" style="flex:1; border-color: #ef4444; color: #ef4444;">SALIR</button>
     </div>
   </div>
 
-  <div class="footer">Desarrollado por ⚡ Obras Manizales ⚡</div>
+  <!-- RUTINA / REGISTRO DE MARCA -->
+  <div class="view-container" id="vistaRutina">
+    <h2 style="text-align: left; font-size: 20px; margin-bottom: 5px;">REGISTRO DE MARCA</h2>
+    <p style="text-align: left; color: var(--text-muted); font-size: 13px; margin-bottom: 20px; margin-top:0;">Guarda tu progreso y gana puntos.</p>
+
+    <div class="input-group">
+      <label>CATEGORÍA DEL EJERCICIO</label>
+      <select id="appCategoria" onchange="actualizarMovimientos()"></select>
+    </div>
+
+    <div class="input-group">
+      <label>MOVIMIENTO</label>
+      <select id="appMovimiento" onchange="mostrarVideoDemostrativo()"><option value="">Seleccione...</option></select>
+    </div>
+
+    <!-- MINI REPRODUCTOR DE VIDEO -->
+    <div class="video-container" id="videoContainer">
+      <img id="videoImg" src="" alt="Técnica de ejercicio">
+      <div class="video-overlay">
+        <div class="video-title">🎥 <span id="videoTitleText">Técnica Correcta</span></div>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>RESULTADO (PESO / REPS / TIEMPO)</label>
+      <input type="text" id="appResultado" placeholder="Ej. 100 kg x 5 reps, o 5:30 min">
+    </div>
+
+    <div class="input-group">
+      <label>OBSERVACIONES O SENSACIONES</label>
+      <textarea id="appObservaciones" rows="2" placeholder="Me sentí fuerte, fallé el último intento..."></textarea>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+      <input type="file" id="inputFoto" accept="image/*" capture="environment">
+      <button class="btn btn-media" onclick="document.getElementById('inputFoto').click()">📸 FOTO PR</button>
+      
+      <input type="file" id="inputVideo" accept="video/*" capture="environment">
+      <button class="btn btn-media" onclick="document.getElementById('inputVideo').click()">🎥 VIDEO PR</button>
+    </div>
+
+    <div class="queue-container" id="queueContainer" style="display:none;">
+      <label style="color:white; margin-bottom: 10px; display:block;">EVIDENCIA ADJUNTA (<span id="queueCount">0</span>)</label>
+      <div id="queueList"></div>
+    </div>
+
+    <button id="btnEnviarReporte" class="btn" style="margin-top: 20px;" onclick="enviarRutina()">🚀 SUBIR RESULTADO (+50 PTS)</button>
+    <button class="btn btn-outline" style="margin-top: 10px; font-size: 13px;" onclick="cambiarVista('vistaDashboard')">CANCELAR</button>
+  </div>
+
+  <!-- LEADERBOARD -->
+  <div class="view-container" id="vistaLeaderboard">
+    <h2 style="font-size: 24px; color: var(--gold); margin-bottom: 5px;">TOP ATLETAS</h2>
+    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">Los mejores de Elementa Box.</p>
+
+    <div class="leaderboard-list" id="listaLeaderboard">
+      <!-- Se llena por JS -->
+    </div>
+
+    <button class="btn btn-outline" style="margin-top: 25px;" onclick="cambiarVista('vistaDashboard')">VOLVER AL DASHBOARD</button>
+  </div>
 
   <script>
     // =========================================================
-    // ⚠️ ¡IMPORTANTE! ACTUALIZA ESTA URL LUEGO DE DESPLEGAR TU SCRIPT ⚠️
+    // URL DE TU APPS SCRIPT ACTUAL
     // =========================================================
     const URL_APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbytUc3vdgmNOD-PpXxUsUsX0dIL-ui2h4NYVfxA8PW-2DBqydkaRx8jmvUwWUptv9TA/exec';
-    // =========================================================
     
-    let dbUsuarios = [];
-    let dbProyectos = {};
+    // DATOS HARDCODEADOS PARA EL BOX (Sobrescribe "Proyectos/Frentes" de construcción)
+    const GYM_DATA = {
+      "HALTEROFILIA": {
+        frentes: ["Snatch (Arranque)", "Clean & Jerk (Envión)", "Squat Clean", "Power Snatch", "Overhead Squat", "Front Squat", "Back Squat", "Deadlift (Peso Muerto)"],
+        imagenes: {
+          "Snatch (Arranque)": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=800&q=80",
+          "Clean & Jerk (Envión)": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=800&q=80",
+          "Deadlift (Peso Muerto)": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80",
+          "default": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=800&q=80"
+        }
+      },
+      "GIMNASIA": {
+        frentes: ["Pull-ups (Dominadas)", "Chest to Bar", "Muscle Up (Barra)", "Muscle Up (Anillas)", "Toes to Bar", "Handstand Walk", "HSPU"],
+        imagenes: {
+          "Pull-ups (Dominadas)": "https://images.unsplash.com/photo-1598971639058-fab3c3109a00?auto=format&fit=crop&w=800&q=80",
+          "Muscle Up (Anillas)": "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=800&q=80",
+          "default": "https://images.unsplash.com/photo-1526506114861-51ce30a3f056?auto=format&fit=crop&w=800&q=80"
+        }
+      },
+      "METCON / CARDIO": {
+        frentes: ["Remo (Row)", "Assault Bike", "Correr (Run)", "Double Unders", "Burpees", "Box Jumps", "Wall Balls"],
+        imagenes: {
+          "Remo (Row)": "https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=800&q=80",
+          "Double Unders": "https://images.unsplash.com/photo-1522898467493-49726bf28798?auto=format&fit=crop&w=800&q=80",
+          "default": "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?auto=format&fit=crop&w=800&q=80"
+        }
+      }
+    };
+
     let usuarioActual = {};
     let archivosQueue = [];
     
-    let simuladorEnMarcha;
-    let ultimaVista = 'vistaLogin';
-    let cedulaParaReasignar = "";
+    // Variables locales para simular Gamificación (Puntos/Racha)
+    let misPuntosLocales = localStorage.getItem('elementa_puntos') ? parseInt(localStorage.getItem('elementa_puntos')) : 0;
+    let miRachaLocal = localStorage.getItem('elementa_racha') ? parseInt(localStorage.getItem('elementa_racha')) : 1;
 
     window.addEventListener('DOMContentLoaded', async () => {
-        mostrarLoader("Iniciando Sistema");
+        mostrarLoader("Verificando Conexión");
         try {
-            const response = await fetch(URL_APPS_SCRIPT, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'init' })
-            });
+            // Hacemos el init normal para verificar conectividad y traer usuarios
+            const response = await fetch(URL_APPS_SCRIPT, { method: 'POST', body: JSON.stringify({ action: 'init' }) });
             const result = await response.json();
             
             if (result.estado === 'exito') {
-                dbUsuarios = result.usuarios || [];
-                dbProyectos = result.proyectos || {};
-                
-                const datalist = document.getElementById('listaNombres');
-                dbUsuarios.forEach(u => {
-                    let option = document.createElement('option');
-                    option.value = u.nombre;
-                    datalist.appendChild(option);
-                });
-
-                const selProyReg = document.getElementById('regProyecto');
-                Object.keys(dbProyectos).forEach(p => {
-                    let opt1 = document.createElement('option'); opt1.value = p; opt1.text = p;
-                    selProyReg.appendChild(opt1);
-                });
-
-                clearInterval(simuladorEnMarcha);
-                document.getElementById("vistaLoader").classList.remove("is-processing");
+                ocultarLoader();
                 cambiarVista('vistaLogin');
             } else {
-                errorLoader("No se pudo cargar la base de datos.");
+                alert("Error cargando base de datos. Usando modo offline para UI.");
+                ocultarLoader();
+                cambiarVista('vistaLogin');
             }
         } catch (e) {
-            errorLoader("Fallo de conexión al servidor.");
+            alert("Error de conexión. Mostrando UI directamente.");
+            ocultarLoader();
+            cambiarVista('vistaLogin');
         }
     });
 
     async function iniciarSesion() {
       const nombre = document.getElementById('loginNombre').value.trim().toUpperCase();
       const password = document.getElementById('loginPassword').value.trim();
-      if(!nombre || !password) return alert("Por favor ingresa Usuario (Nombre) y Contraseña.");
+      if(!nombre || !password) return alert("Por favor ingresa Atleta y Contraseña.");
       
-      mostrarLoader("Autenticando Usuario");
+      mostrarLoader("Autenticando");
       try {
-        const r = await fetch(URL_APPS_SCRIPT, { 
-            method: 'POST', 
-            body: JSON.stringify({ action: 'login', nombre: nombre, password: password }) 
-        });
+        const r = await fetch(URL_APPS_SCRIPT, { method: 'POST', body: JSON.stringify({ action: 'login', nombre: nombre, password: password }) });
         const res = await r.json();
         
         if(res.estado === 'exito') {
           usuarioActual = res;
-          document.getElementById('infoUsuarioNombre').innerText = res.nombre;
-          document.getElementById('infoUsuarioCedula').innerText = `CC: ${res.cedula}`;
-          document.getElementById('infoUsuarioCorreo').innerText = res.correo;
-
-          const selectProyecto = document.getElementById('appProyecto');
-          selectProyecto.innerHTML = ''; 
           
-          Object.keys(dbProyectos).forEach(p => {
-              if (p.toUpperCase() === 'PERSONAL DISPERSO - OBRAS MANIZALES' && res.proyecto.toUpperCase() !== 'PERSONAL DISPERSO - OBRAS MANIZALES') {
-                  return; 
-              }
-              let opt = document.createElement('option'); 
-              opt.value = p; 
-              opt.text = p;
-              selectProyecto.appendChild(opt);
-          });
+          // Actualizar UI del Dashboard
+          document.getElementById('dashNombre').innerText = res.nombre;
           
-          selectProyecto.value = res.proyecto;
-          actualizarFrentes();
-
-          const badge = document.getElementById('badgeModulo');
-          badge.style.display = 'block';
-          if (res.modulo === 'SST') {
-              badge.innerText = '🛡️ SST';
-              badge.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
-          } else {
-              badge.innerText = '🏗️ OBRA';
-              badge.style.background = 'linear-gradient(135deg, #0575e6, #021b79)';
+          // Si es un usuario nuevo (o vacio en localstorage), le damos puntos aleatorios para el demo
+          if(misPuntosLocales === 0) {
+            misPuntosLocales = Math.floor(Math.random() * 500) + 100;
+            miRachaLocal = Math.floor(Math.random() * 5) + 1;
+            localStorage.setItem('elementa_puntos', misPuntosLocales);
+            localStorage.setItem('elementa_racha', miRachaLocal);
           }
 
+          document.getElementById('dashPuntos').innerText = `🏆 ${misPuntosLocales}`;
+          document.getElementById('dashRacha').innerText = `🔥 ${miRachaLocal}`;
+
           document.getElementById('loginPassword').value = ''; 
-          exitoLoader(`Bienvenido al sistema,<br><b style="color:white;">${res.nombre}</b>`, 'vistaApp');
-        } else errorLoader(res.mensaje);
-      } catch (e) { errorLoader("Error de conexión al servidor central."); }
-    }
-
-    function actualizarFrentes() {
-        const proyectoElegido = document.getElementById('appProyecto').value;
-        const frentesDropdown = document.getElementById('appFrente');
-        frentesDropdown.innerHTML = '<option value="">Seleccione...</option>';
-        
-        const infoProy = dbProyectos[proyectoElegido];
-        if(infoProy && infoProy.frentes) {
-            infoProy.frentes.forEach(f => {
-                let opt = document.createElement('option');
-                opt.value = f; opt.text = f;
-                frentesDropdown.appendChild(opt);
-            });
+          ocultarLoader();
+          cambiarVista('vistaDashboard');
+        } else {
+            alert(res.mensaje);
+            ocultarLoader();
         }
-    }
-
-    function validarCorreoRegex(correo) {
-        const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-        return regex.test(correo);
+      } catch (e) { 
+          alert("Error de red. Intenta de nuevo."); 
+          ocultarLoader();
+      }
     }
 
     async function registrarUsuario() {
-        const cedula = document.getElementById('regCedula').value.trim().toUpperCase();
+        const cedula = document.getElementById('regCedula').value.trim();
         const nombre = document.getElementById('regNombre').value.trim().toUpperCase();
-        const correo = document.getElementById('regCorreo').value.trim().toUpperCase();
-        const cargo = document.getElementById('regCargo').value.trim().toUpperCase();
-        const proyecto = document.getElementById('regProyecto').value;
+        const correo = document.getElementById('regCorreo').value.trim().toLowerCase();
+        const cargo = document.getElementById('regCargo').value; // Default ATLETA
+        const proyecto = document.getElementById('regProyecto').value; // El nivel
         
-        if(!cedula || !nombre) return alert("Cédula y Nombre son obligatorios.");
-        if (!validarCorreoRegex(correo)) return alert("⚠️ Por favor, ingrese un correo electrónico válido.");
+        if(!cedula || !nombre) return alert("Documento y Nombre son obligatorios.");
 
-        mostrarLoader("Verificando Datos");
+        mostrarLoader("Registrando");
         try {
             const r = await fetch(URL_APPS_SCRIPT, { method: 'POST', body: JSON.stringify({ action: 'register', cedula, nombre, correo, cargo, proyecto }) });
             const res = await r.json();
             
+            ocultarLoader();
             if(res.estado === 'exito') {
-                document.getElementById('regCedula').value = ''; document.getElementById('regNombre').value = '';
-                document.getElementById('regCorreo').value = ''; document.getElementById('regCargo').value = '';
-                exitoLoader(`Solicitud enviada a Administración.`, 'vistaLogin');
-            } 
-            else if (res.estado === 'duplicado') {
-                cedulaParaReasignar = cedula; 
-                clearInterval(simuladorEnMarcha); 
-                document.getElementById("vistaLoader").classList.remove("is-processing"); 
-                cambiarVista('vistaReasignar');
-            }
-            else {
-                errorLoader(res.mensaje);
-            }
-        } catch (e) { errorLoader("Error de conexión."); }
-    }
-
-    async function enviarReasignacion() {
-        const nuevoCorreo = document.getElementById('reasignarCorreo').value.trim().toUpperCase();
-        
-        if (nuevoCorreo !== "" && !validarCorreoRegex(nuevoCorreo)) {
-            return alert("⚠️ Por favor, ingrese un correo electrónico válido.");
-        }
-
-        mostrarLoader("Enviando Solicitud");
-        try {
-            const r = await fetch(URL_APPS_SCRIPT, { 
-                method: 'POST', 
-                body: JSON.stringify({ action: 'reasignar', cedula: cedulaParaReasignar, nuevoCorreo: nuevoCorreo }) 
-            });
-            const res = await r.json();
-            
-            if(res.estado === 'exito') {
-                document.getElementById('reasignarCorreo').value = '';
-                cedulaParaReasignar = "";
-                document.getElementById('regCedula').value = ''; document.getElementById('regNombre').value = '';
-                document.getElementById('regCorreo').value = ''; document.getElementById('regCargo').value = '';
-                exitoLoader(`El Administrador ha sido notificado para reasignar su contraseña.`, 'vistaLogin');
+                alert("¡Solicitud enviada! Pide tu contraseña al Coach/Administrador.");
+                cambiarVista('vistaLogin');
             } else {
-                errorLoader(res.mensaje);
+                alert(res.mensaje || "Ocurrió un error.");
             }
-        } catch (e) { errorLoader("Error de conexión."); }
+        } catch (e) { 
+            alert("Error de conexión."); 
+            ocultarLoader();
+        }
     }
 
-    function cerrarSesion() {
-        usuarioActual = {};
+    function prepararRutina() {
+        const selectCat = document.getElementById('appCategoria');
+        selectCat.innerHTML = '<option value="">Seleccione Categoría...</option>';
+        Object.keys(GYM_DATA).forEach(cat => {
+            selectCat.innerHTML += `<option value="${cat}">${cat}</option>`;
+        });
+        
+        document.getElementById('appMovimiento').innerHTML = '<option value="">Seleccione...</option>';
+        document.getElementById('videoContainer').style.display = 'none';
+        document.getElementById('appResultado').value = '';
+        document.getElementById('appObservaciones').value = '';
         archivosQueue = [];
         actualizarUICola();
-        document.getElementById('appUbicacion').value = '';
-        document.getElementById('appDescripcion').value = '';
-        document.getElementById('loginPassword').value = '';
-        document.getElementById('badgeModulo').style.display = 'none';
-        cambiarVista('vistaLogin');
+        
+        cambiarVista('vistaRutina');
     }
 
-    let mediaRecorder; let audioChunks = []; let isRecording = false; let intervaloCronometro; let segundos = 0;
-    const btnGrabarAudio = document.getElementById('btnGrabarAudio'); 
-    const cronometro = document.getElementById('cronometro'); 
+    function actualizarMovimientos() {
+        const cat = document.getElementById('appCategoria').value;
+        const selectMov = document.getElementById('appMovimiento');
+        selectMov.innerHTML = '<option value="">Seleccione Movimiento...</option>';
+        document.getElementById('videoContainer').style.display = 'none';
 
-    btnGrabarAudio.addEventListener('click', async () => {
-      if (!isRecording) {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          mediaRecorder = new MediaRecorder(stream);
-          audioChunks = [];
-          mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
-          mediaRecorder.onstop = () => {
-              const audioBlob = new Blob(audioChunks, { type: 'audio/mp4' });
-              agregarACola(audioBlob, 'Audio', 'mp4');
-          };
-          mediaRecorder.start();
-          isRecording = true;
-          
-          btnGrabarAudio.classList.add('btn-audio-grabando');
-          btnGrabarAudio.innerHTML = "⏹️ DETENER AUDIO";
-          cronometro.style.display = 'block'; segundos = 0; cronometro.innerText = "00:00";
-          intervaloCronometro = setInterval(() => {
-            segundos++;
-            cronometro.innerText = `${Math.floor(segundos/60).toString().padStart(2,'0')}:${(segundos%60).toString().padStart(2,'0')}`;
-          }, 1000);
-        } catch (error) { alert("Permiso de micrófono denegado."); }
-      } else {
-        mediaRecorder.stop();
-        mediaRecorder.stream.getTracks().forEach(track => track.stop());
-        isRecording = false;
-        btnGrabarAudio.classList.remove('btn-audio-grabando');
-        btnGrabarAudio.innerHTML = "🎤 GRABAR AUDIO";
-        clearInterval(intervaloCronometro); cronometro.style.display = 'none';
-      }
-    });
+        if(GYM_DATA[cat]) {
+            GYM_DATA[cat].frentes.forEach(mov => {
+                selectMov.innerHTML += `<option value="${mov}">${mov}</option>`;
+            });
+        }
+    }
 
+    function mostrarVideoDemostrativo() {
+        const cat = document.getElementById('appCategoria').value;
+        const mov = document.getElementById('appMovimiento').value;
+        const videoContainer = document.getElementById('videoContainer');
+        const videoImg = document.getElementById('videoImg');
+        const videoTitleText = document.getElementById('videoTitleText');
+
+        if(cat && mov && GYM_DATA[cat]) {
+            // Buscar imagen específica o usar default de la categoría
+            let imgSrc = GYM_DATA[cat].imagenes[mov] || GYM_DATA[cat].imagenes["default"];
+            videoImg.src = imgSrc;
+            videoTitleText.innerText = mov;
+            videoContainer.style.display = 'block';
+        } else {
+            videoContainer.style.display = 'none';
+        }
+    }
+
+    // --- MANEJO DE ARCHIVOS (FOTOS/VIDEOS) ---
     document.getElementById('inputFoto').addEventListener('change', e => procesarArchivoLocal(e, 'Foto'));
     document.getElementById('inputVideo').addEventListener('change', e => procesarArchivoLocal(e, 'Video'));
 
     function procesarArchivoLocal(e, tipo) {
       const archivo = e.target.files[0];
       if (!archivo) return;
-      if (archivo.size > 40 * 1024 * 1024) { alert(`Archivo muy pesado (Máx 40MB).`); e.target.value = ""; return; }
+      if (archivo.size > 20 * 1024 * 1024) { alert(`Archivo muy pesado (Máx 20MB).`); e.target.value = ""; return; }
       
       let extension = archivo.name.split('.').pop().toLowerCase();
       if(tipo === 'Video') extension = 'mp4'; 
       
-      agregarACola(archivo, tipo, extension);
-      e.target.value = "";
-    }
-
-    function agregarACola(blob, tipo, extension) {
       const reader = new FileReader();
-      reader.readAsDataURL(blob);
+      reader.readAsDataURL(archivo);
       reader.onloadend = function() {
           archivosQueue.push({ base64: reader.result, tipo: tipo, extension: extension });
           actualizarUICola();
       }
+      e.target.value = "";
     }
 
     function removerDeCola(index) {
@@ -503,202 +473,166 @@
     }
 
     function actualizarUICola() {
+        const container = document.getElementById('queueContainer');
         const queueList = document.getElementById('queueList');
-        const countSpan = document.getElementById('queueCount');
-        countSpan.innerText = archivosQueue.length;
+        document.getElementById('queueCount').innerText = archivosQueue.length;
         
         if(archivosQueue.length === 0) {
-            queueList.innerHTML = "No hay archivos pendientes.";
-            document.getElementById('btnEnviarReporte').style.display = 'none';
+            container.style.display = 'none';
             return;
         }
 
-        document.getElementById('btnEnviarReporte').style.display = 'block';
+        container.style.display = 'block';
         queueList.innerHTML = "";
         
         archivosQueue.forEach((item, index) => {
+            let icon = item.tipo === 'Foto' ? '📸' : '🎥';
             let div = document.createElement('div');
-            div.className = `queue-item ${item.tipo.toLowerCase()}`;
-            let icon = item.tipo === 'Foto' ? '📸' : (item.tipo === 'Video' ? '🎥' : '🎤');
-            div.innerHTML = `<span>${icon} Archivo de ${item.tipo} ${index + 1}</span> <button class="btn-remove" onclick="removerDeCola(${index})">×</button>`;
+            div.className = 'queue-item';
+            div.innerHTML = `<span>${icon} Evidencia ${index + 1} adjunta</span> <button class="btn-remove" onclick="removerDeCola(${index})">×</button>`;
             queueList.appendChild(div);
         });
     }
 
-    function obtenerFechaFormateada() {
-        const d = new Date();
-        const p = (n) => n.toString().padStart(2, '0');
-        return `${p(d.getDate())}-${p(d.getMonth()+1)}-${d.getFullYear()}_${p(d.getHours())}-${p(d.getMinutes())}-${p(d.getSeconds())}`;
-    }
-
-    async function enviarReporteEnCola() {
-        if (isRecording) {
-            alert("⚠️ Hay un audio grabándose. Por favor detén la grabación antes de enviar el reporte.");
-            return;
+    // --- ENVÍO DE DATOS MANTENIENDO COMPATIBILIDAD CON EXCEL ACTUAL ---
+    async function enviarRutina() {
+        const categoria = document.getElementById('appCategoria').value;
+        const movimiento = document.getElementById('appMovimiento').value;
+        const resultado = document.getElementById('appResultado').value.trim();
+        const observaciones = document.getElementById('appObservaciones').value.trim();
+        
+        if(!categoria || !movimiento || !resultado) {
+            return alert("Por favor selecciona la categoría, el movimiento y anota tu resultado.");
         }
 
-        const proyectoElegido = document.getElementById('appProyecto').value;
-        const frente = document.getElementById('appFrente').value.trim().toUpperCase();
-        const ubicacion = document.getElementById('appUbicacion').value.trim().toUpperCase();
-        const descripcion = document.getElementById('appDescripcion').value.trim();
-        
-        if(!proyectoElegido) return alert("⚠️ Seleccione un PROYECTO.");
-        if(!frente) return alert("⚠️ Debe seleccionar un FRENTE.");
-        if(!ubicacion) return alert("⚠️ Debe ingresar una UBICACIÓN.");
-        if(archivosQueue.length === 0) return alert("Agregue al menos un archivo.");
-
-        const infoProy = dbProyectos[proyectoElegido];
-        const sigla = infoProy ? infoProy.sigla : "S-S";
-        const fecha = obtenerFechaFormateada();
-        const modulo = usuarioActual.modulo || "OBRA";
-
-        mostrarLoader("Subiendo Archivos...");
+        mostrarLoader("Registrando Marca...");
         let errores = 0;
-        let ultimoErrorTxt = ""; 
-        let contadoresTipo = { 'Foto': 0, 'Video': 0, 'Audio': 0 };
         let linksDeArchivos = []; 
 
+        // 1. Subir archivos si los hay
         for(let i=0; i<archivosQueue.length; i++) {
             let item = archivosQueue[i];
-            let msg = `Subiendo archivo ${i+1} de ${archivosQueue.length}...`;
-            actualizarUI({ progreso: Math.floor(((i)/archivosQueue.length)*100), mensaje: msg });
-
-            contadoresTipo[item.tipo]++;
-            let nombreFinal = `${sigla}-${frente}-${ubicacion}-${fecha}_${modulo}_${item.tipo.toUpperCase()}${contadoresTipo[item.tipo]}.${item.extension}`;
+            let nombreFinal = `PR_${movimiento.replace(/[^a-zA-Z0-9]/g, '')}_${new Date().getTime()}.${item.extension}`;
 
             try {
                 const r = await fetch(URL_APPS_SCRIPT, { method: 'POST', body: JSON.stringify({ action: 'upload', base64: item.base64, nombre: nombreFinal }) });
                 const res = await r.json();
-                
-                if(res.estado !== 'exito') {
-                    errores++;
-                    ultimoErrorTxt = res.mensaje || "Error desconocido devuelto por el servidor.";
-                } else {
-                    linksDeArchivos.push({ tipo: item.tipo, url: res.url });
-                }
-            } catch (e) { 
-                errores++; 
-                ultimoErrorTxt = e.message || e.toString();
-            }
+                if(res.estado === 'exito') linksDeArchivos.push(res.url);
+                else errores++;
+            } catch (e) { errores++; }
         }
 
-        if(errores === 0) {
-            let resumenText = `Se cargaron: ${contadoresTipo['Foto']} Fotos, ${contadoresTipo['Video']} Videos, ${contadoresTipo['Audio']} Audios.`;
-            
-            // ENVÍO DE TRAZABILIDAD AGRUPADA
-            try {
-                const payloadTrazabilidad = {
-                    action: 'trazabilidad',
-                    usuario: usuarioActual.nombre,
-                    cedula: usuarioActual.cedula,
-                    proyecto: proyectoElegido,
-                    frente: frente,
-                    ubicacion: ubicacion,
-                    modulo: modulo,
-                    resumen: resumenText,
-                    descripcion: descripcion
-                };
-                await fetch(URL_APPS_SCRIPT, { method: 'POST', body: JSON.stringify(payloadTrazabilidad) });
-            } catch (e) { console.log("Fallo trazabilidad, pero archivos subidos"); }
+        // 2. Enviar Trazabilidad (Mapeo a tu hoja de Excel)
+        let resumenText = archivosQueue.length > 0 ? `Evidencia: ${linksDeArchivos.length} archivos subidos. ` : "Sin evidencia multimedia. ";
+        resumenText += `🔥 PUNTOS GANADOS: +50`;
 
-            let wsText = `*--- REPORTE DE OBRA - ${modulo} ---*\n`;
-            wsText += `*Registra:* ${usuarioActual.nombre}\n`;
-            wsText += `*Proyecto:* ${proyectoElegido}\n`;
-            wsText += `*Ubicacion:* ${frente} - ${ubicacion}\n\n`;
+        try {
+            const payloadTrazabilidad = {
+                action: 'trazabilidad',
+                usuario: usuarioActual.nombre,
+                cedula: usuarioActual.cedula,
+                proyecto: categoria,       // Se guarda en la columna PROYECTO
+                frente: movimiento,        // Se guarda en la columna FRENTE
+                ubicacion: resultado,      // Se guarda en la columna UBICACIÓN
+                modulo: "BOX",             // Se guarda en la columna MÓDULO
+                resumen: resumenText,      // Se guarda en la columna RESUMEN DE ARCHIVOS
+                descripcion: observaciones // Se guarda en la columna DESCRIPCIÓN
+            };
+            await fetch(URL_APPS_SCRIPT, { method: 'POST', body: JSON.stringify(payloadTrazabilidad) });
             
-            if (descripcion !== "") {
-                wsText += `*Descripcion:*\n_${descripcion}_\n\n`;
-            }
-            
-            wsText += `*ARCHIVOS ADJUNTOS (${linksDeArchivos.length}):*\n`;
-            linksDeArchivos.forEach((file, index) => {
-                wsText += `- Archivo ${file.tipo} ${index + 1}: ${file.url}\n`;
-            });
+            // Éxito: Sumar puntos locales y mostrar animación
+            misPuntosLocales += 50;
+            localStorage.setItem('elementa_puntos', misPuntosLocales);
+            document.getElementById('dashPuntos').innerText = `🏆 ${misPuntosLocales}`;
 
-            let linkWa = `https://wa.me/?text=${encodeURIComponent(wsText)}`;
-            let btnWhatsAppHTML = `<br><br><a href="${linkWa}" target="_blank" style="text-decoration:none;"><button class="btn-action btn-whatsapp" style="margin-top:0;">💬 COMPARTIR EN WHATSAPP</button></a>`;
+            ocultarLoader();
+            mostrarAnimacionPuntos("+50 PTS");
+            cambiarVista('vistaDashboard');
 
-            archivosQueue = [];
-            actualizarUICola();
-            document.getElementById('appUbicacion').value = '';
-            document.getElementById('appDescripcion').value = '';
-            
-            exitoLoader(`Reporte completado.<br><span style="font-size:12px;color:gray;">Archivos subidos exitosamente.</span>${btnWhatsAppHTML}`, 'vistaApp');
-        } else {
-            errorLoader(`Fallo en ${errores} archivo(s).<br><span style="font-size:11px;color:#ffb3b3;margin-top:10px;display:block;">Detalle: ${ultimoErrorTxt}</span>`);
+        } catch (e) { 
+            ocultarLoader();
+            alert("Hubo un error guardando tu registro en la base de datos."); 
         }
     }
 
+    function mostrarLeaderboard() {
+        // Generar un leaderboard de prueba que incluye al usuario actual
+        const lista = document.getElementById('listaLeaderboard');
+        lista.innerHTML = "";
+        
+        let competidores = [
+            { nombre: "Laura G.", puntos: 1520 },
+            { nombre: "Yeison H.", puntos: 1450 },
+            { nombre: "Andrés M.", puntos: 1200 },
+            { nombre: "Daniela V.", puntos: 950 },
+            { nombre: usuarioActual.nombre || "Tú", puntos: misPuntosLocales }
+        ];
+        
+        // Ordenar de mayor a menor
+        competidores.sort((a,b) => b.puntos - a.puntos);
+        // Filtrar únicos si casualmente "Yeison H." era el mismo usuario
+        let unicos = [];
+        let nombresVistos = new Set();
+        for(let c of competidores) {
+            if(!nombresVistos.has(c.nombre)) {
+                unicos.push(c);
+                nombresVistos.add(c.nombre);
+            }
+        }
+
+        unicos.slice(0, 5).forEach((c, i) => {
+            let rankClass = i === 0 ? 'rank-1' : (i === 1 ? 'rank-2' : (i === 2 ? 'rank-3' : ''));
+            let isMe = c.nombre === (usuarioActual.nombre || "Tú");
+            let row = `
+                <div class="leaderboard-item" style="${isMe ? 'background: rgba(255,69,0,0.1);' : ''}">
+                    <div class="rank ${rankClass}">${i + 1}</div>
+                    <div class="lb-user" style="${isMe ? 'color: var(--primary);' : ''}">${c.nombre} ${isMe ? '(Tú)' : ''}</div>
+                    <div class="lb-points">${c.puntos} pts</div>
+                </div>
+            `;
+            lista.innerHTML += row;
+        });
+
+        cambiarVista('vistaLeaderboard');
+    }
+
+    function mostrarAnimacionPuntos(texto) {
+        const anim = document.createElement('div');
+        anim.className = 'points-animation';
+        anim.innerText = texto;
+        document.body.appendChild(anim);
+        setTimeout(() => { anim.remove(); }, 2000);
+    }
+
+    function cerrarSesion() {
+        usuarioActual = {};
+        cambiarVista('vistaLogin');
+    }
+
+    // --- UTILIDADES ---
     function cambiarVista(idVista) {
-      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.view-container').forEach(c => c.classList.remove('active'));
       document.getElementById(idVista).classList.add('active');
     }
-    
-    function resetBtnError() {
-      const btn = document.getElementById("btnErrorLoader");
-      btn.className = "btn-action btn-error"; 
-      btn.style.background = ""; 
-      btn.innerHTML = "Cerrar y Revisar";
+
+    function mostrarLoader(msg) {
+        document.getElementById('loaderMsg').innerText = msg;
+        document.getElementById('vistaLoader').style.display = 'block';
+        document.getElementById('vistaLoader').style.position = 'fixed';
+        document.getElementById('vistaLoader').style.top = '0';
+        document.getElementById('vistaLoader').style.left = '0';
+        document.getElementById('vistaLoader').style.height = '100vh';
+        document.getElementById('vistaLoader').style.zIndex = '999';
+        document.getElementById('vistaLoader').style.backgroundColor = 'rgba(0,0,0,0.9)';
     }
 
-    function mostrarLoader(titulo) {
-      ultimaVista = document.querySelector('.card.active') ? document.querySelector('.card.active').id : 'vistaLogin';
-      cambiarVista('vistaLoader');
-      document.getElementById("vistaLoader").classList.add("is-processing");
-      document.getElementById("btnErrorLoader").style.display = "none";
-      document.getElementById("btnExitoLoader").style.display = "none";
-      document.getElementById("loaderTitle").innerText = titulo;
-      document.getElementById("loaderTitle").style.color = "white";
-      let p = 2; actualizarUI({ progreso: p, mensaje: "Estableciendo conexión segura..." });
-      simuladorEnMarcha = setInterval(() => {
-        if (p < 85) { p += Math.floor(Math.random()*8)+2; if(p>85) p=85; actualizarUI({ progreso: p, mensaje: "Procesando datos cifrados..." }); }
-      }, 800);
+    function ocultarLoader() {
+        document.getElementById('vistaLoader').style.display = 'none';
+        document.getElementById('vistaLoader').style.position = 'relative';
+        document.getElementById('vistaLoader').style.height = 'auto';
+        document.getElementById('vistaLoader').style.backgroundColor = 'transparent';
     }
 
-    function exitoLoader(html, sigVista) {
-      clearInterval(simuladorEnMarcha); 
-      actualizarUI({ progreso: 100, mensaje: "Completado." });
-      setTimeout(() => {
-        document.getElementById("vistaLoader").classList.remove("is-processing"); 
-        const t = document.getElementById("loaderTitle"); t.innerHTML = "¡Éxito! ✓"; t.style.color = "#00f260";
-        document.getElementById("progressBar").style.background = "#00f260";
-        const m = document.getElementById("message"); clearInterval(m.scrambleInterval); m.style.color = "#00f260"; m.innerHTML = html;
-        const b = document.getElementById("btnExitoLoader"); b.style.display = "flex"; b.onclick = () => cambiarVista(sigVista);
-      }, 500);
-    }
-
-    function errorLoader(msgError) {
-      clearInterval(simuladorEnMarcha); document.getElementById("vistaLoader").classList.remove("is-processing"); 
-      const t = document.getElementById("loaderTitle"); t.innerHTML = "Fallo del Sistema ⚠️"; t.style.color = "#ff6b6b";
-      document.getElementById("progressBar").style.background = "#ff416c"; document.getElementById("progressBar").innerHTML = "Error";
-      const m = document.getElementById("message"); clearInterval(m.scrambleInterval); m.style.color = "#ff8787"; m.innerHTML = `<b>${msgError}</b>`;
-      resetBtnError();
-      document.getElementById("btnErrorLoader").style.display = "flex";
-    }
-
-    function volverDeError() { 
-        document.getElementById("message").style.color = "#00f260"; 
-        document.getElementById("loginPassword").value = '';
-        resetBtnError();
-        cambiarVista('vistaLogin'); 
-    }
-
-    function textScramble(e, t) {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*<>{}\\[]'; let i = 0; clearInterval(e.scrambleInterval); 
-      e.scrambleInterval = setInterval(() => {
-        e.innerText = t.split('').map((l, x) => x < i ? l : chars[Math.floor(Math.random()*chars.length)]).join('');
-        if (i >= t.length) clearInterval(e.scrambleInterval); i += 0.5; 
-      }, 20);
-    }
-
-    function actualizarUI(d) { 
-        document.getElementById("progressBar").style.width = d.progreso+"%"; 
-        document.getElementById("progressBar").innerHTML = d.progreso+"%"; 
-        if(document.getElementById("message").dataset.current !== d.mensaje) { 
-            document.getElementById("message").dataset.current = d.mensaje; 
-            textScramble(document.getElementById("message"), d.mensaje); 
-        } 
-    }
   </script>
 </body>
 </html>
