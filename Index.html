@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Plataforma de Registro y Captura</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --primary: #00f260; --secondary: #0575e6; --bg-dark: #04090b; --card-bg: rgba(10, 15, 18, 0.75); }
+    body { margin: 0; padding: 20px; background: var(--bg-dark); font-family: 'Inter', sans-serif; color: white; text-align: center; overflow-y: auto; overflow-x: hidden; position: relative; scrollbar-width: none; -ms-overflow-style: none; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;}
+    body::-webkit-scrollbar { display: none; }
+    
+    .cyber-grid { position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background-image: linear-gradient(rgba(0, 242, 96, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 242, 96, 0.15) 1px, transparent 1px); background-size: 40px 40px; transform: perspective(500px) rotateX(60deg); animation: moveGrid 3s linear infinite; z-index: 0; opacity: 0.6; pointer-events: none; }
+    @keyframes moveGrid { 0% { transform: perspective(500px) rotateX(60deg) translateY(0); } 100% { transform: perspective(500px) rotateX(60deg) translateY(40px); } }
+    body::after { content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%); background-size: 100% 4px; z-index: 100; pointer-events: none; }
+    .ambient-light { position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 30% 40%, rgba(5, 117, 230, 0.15) 0%, transparent 40%), radial-gradient(circle at 70% 60%, rgba(0, 242, 96, 0.1) 0%, transparent 40%); animation: rotateGlow 20s linear infinite; z-index: 1; pointer-events: none; }
+    @keyframes rotateGlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
+    @keyframes fadeSlideUp { 0% { opacity: 0; transform: translateY(20px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+    .card { width: 100%; max-width: 420px; position: relative; z-index: 10; background: var(--card-bg); padding: 35px 25px; border-radius: 20px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1); animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; border: 1px solid rgba(0, 242, 96, 0.1); box-sizing: border-box; display: none; margin-bottom: 20px;}
+    .card.active { display: block; }
+    .card.is-processing { border-color: rgba(0, 242, 96, 0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 40px rgba(0, 242, 96, 0.08), inset 0 1px 0 rgba(255,255,255,0.2); }
+    
+    .input-group { margin-bottom: 18px; text-align: left; }
+    label { display: block; font-size: 11px; font-weight: 700; color: #a0aec0; margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.5px;}
+    
+    input[type="text"], input[type="password"], input[type="email"], input:not([type]), select, textarea { 
+      width: 100%; padding: 14px; background: rgba(0, 0, 0, 0.6); 
+      border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; 
+      box-sizing: border-box; font-size: 14px; 
+      color: #ffffff !important; 
+      font-family: 'Inter', sans-serif; transition: all 0.3s; 
+      text-transform: uppercase;
+    }
+    input[type="text"], input[type="password"], input[type="email"], input:not([type]), select {
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    textarea { text-transform: none; resize: vertical; }
+    
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 242, 96, 0.2); background: rgba(0, 0, 0, 0.8); }
+    select option { background: #0f172a; color: white; }
+    input[type="password"] { text-transform: none; }
+    input:read-only { background: rgba(255, 255, 255, 0.03); color: #94a3b8 !important; border-color: rgba(255, 255, 255, 0.05); cursor: not-allowed; }
+
+    input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active{
+        -webkit-box-shadow: 0 0 0 30px #080d10 inset !important; 
+        -webkit-text-fill-color: #ffffff !important; 
+        transition: background-color 5000s ease-in-out 0s;
+    }
+
+    .btn-action { width: 100%; position: relative; overflow: hidden; margin-top: 10px; padding: 16px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; font-family: 'Inter', sans-serif; cursor: pointer; box-shadow: 0 4px 15px rgba(5, 117, 230, 0.3); transition: all 0.3s ease; text-transform: uppercase; }
+    .btn-action:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(5, 117, 230, 0.5); }
+    .btn-action:active { transform: scale(0.98); }
+    
+    .btn-foto { background: rgba(5, 150, 105, 0.1); border: 1px solid #059669; color: #34d399; }
+    .btn-foto:hover { background: #059669; color: white; }
+    .btn-video { background: rgba(124, 58, 237, 0.1); border: 1px solid #7c3aed; color: #a78bfa; }
+    .btn-video:hover { background: #7c3aed; color: white; }
+    .btn-error { background: linear-gradient(135deg, #ff416c, #ff4b2b); box-shadow: 0 4px 15px rgba(255, 75, 43, 0.3); }
+    .btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); }
+    .btn-info { background: linear-gradient(135deg, #0575e6, #021b79); box-shadow: 0 4px 15px rgba(5, 117, 230, 0.3); }
+    .btn-whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
+    
+    .btn-audio-grabando { background: linear-gradient(135deg, #ff416c, #ff4b2b); animation: pulseRecord 1.5s infinite; }
+    @keyframes pulseRecord { 0% { box-shadow: 0 0 0 0 rgba(255, 65, 108, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 65, 108, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 65, 108, 0); } }
+
+    .logo-wrapper { position: relative; display: inline-block; margin-bottom: 25px; }
+    .logo-wrapper img { width: 150px; border-radius: 12px; display: block; animation: float 4s ease-in-out infinite, pulseGlow 3s alternate infinite; }
+    .matrix-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 12px; overflow: hidden; opacity: 0; z-index: 15; background: rgba(0, 15, 5, 0.9); box-shadow: inset 0 0 20px rgba(0, 242, 96, 0.5); pointer-events: none; }
+    .is-processing .matrix-overlay { animation: matrixPulse 4.5s infinite; }
+    .matrix-overlay::before, .matrix-overlay::after { content: "10100110 01100101 10101011 00101001 10010100 01110011 11010101 01010100 11001100 10101011 01100101 10101011 00101001 10010100 01110011 11010101 01010100 11001100 10101011 01100101 10101011 00101001 10010100 01110011 11010101 01010100 11001100 10101011 01100101 10101011 00101001 10010100 01110011 11010101 01010100 11001100 10101011 01100101"; position: absolute; top: -100%; left: 0; width: 100%; color: #00ff41; font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 12px; word-break: break-all; animation: matrixRain 3s linear infinite; }
+    @keyframes matrixPulse { 0%, 15% { opacity: 0; } 40%, 60% { opacity: 1; } 85%, 100% { opacity: 0; } }
+    @keyframes matrixRain { 0% { top: -50%; } 100% { top: 0%; } }
+    .is-processing img { animation: float 4s ease-in-out infinite, glitchMatrixExtremo 4.5s infinite; }
+    @keyframes glitchMatrixExtremo { 0%, 35% { opacity: 1; transform: scale(1) translate(0); filter: none; } 36% { transform: translate(-4px, 2px); } 38% { transform: translate(4px, -2px); } 40%, 60% { opacity: 0; transform: scale(0.95); } 82% { transform: translate(-3px, 1px); } 84% { transform: translate(3px, -1px); } 86%, 100% { opacity: 1; transform: scale(1) translate(0); } }
+    
+    .message { margin: 15px 0; min-height: 20px; font-size: 14.5px; color: #00f260; font-family: 'JetBrains Mono', monospace; font-weight: 500; text-shadow: 0 0 5px rgba(0, 242, 96, 0.4); }
+    .progress-container { width: 100%; background: rgba(0,0,0,0.6); border-radius: 50px; overflow: hidden; height: 22px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.1); position: relative; }
+    .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--primary), var(--secondary)); text-align: right; padding-right: 12px; box-sizing: border-box; line-height: 22px; font-size: 12px; font-weight: 700; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5); transition: width 0.8s; }
+
+    h2 { margin-top: 0; font-size: 22px; font-weight: 700; background: -webkit-linear-gradient(#fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .text-sm { font-size: 12px; color: #94a3b8; margin-top: 15px; display: block; }
+    .link { color: var(--primary); cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
+    #cronometro { font-family: 'JetBrains Mono', monospace; font-size: 24px; color: #ff4b2b; text-shadow: 0 0 10px rgba(255, 75, 43, 0.5); margin: 10px 0; display: none; }
+    input[type="file"] { display: none !important; }
+    
+    .queue-container { margin-top: 25px; padding: 20px; background: rgba(0,0,0,0.4); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.2); text-align: left;}
+    .queue-item { background: rgba(255,255,255,0.05); padding: 10px 12px; border-radius: 8px; font-size: 13px; font-family: 'JetBrains Mono', monospace; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--primary);}
+    .queue-item.foto { border-left-color: #34d399; }
+    .queue-item.video { border-left-color: #a78bfa; }
+    .queue-item.audio { border-left-color: #ff4b2b; }
+    .btn-remove { background: none; border: none; color: #ff4b2b; cursor: pointer; font-size: 18px; font-weight: bold; }
+    
+    .footer { position: relative; margin-top: 25px; width: 100%; text-align: center; font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 4px; text-transform: uppercase; font-weight: 700; z-index: 10; padding-bottom: 20px;}
+
+    .modulo-badge {
+        position: absolute; 
+        top: 20px; 
+        right: 20px; 
+        color: white; 
+        padding: 6px 12px; 
+        border-radius: 12px; 
+        font-size: 11px; 
+        font-weight: 800; 
+        letter-spacing: 1px; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4); 
+        border: 1px solid rgba(255,255,255,0.2); 
+        z-index: 100; 
+        display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="cyber-grid"></div>
+  <div class="ambient-light"></div>
+
+  <div class="card active" id="vistaLoader">
+    <div class="logo-wrapper">
+      <img src="https://lh3.googleusercontent.com/d/1TsBi-7jTXIUG4j9uNDBDu5gwxoTrHUq7" onerror="this.style.display='none'">
+      <div class="matrix-overlay"></div>
+    </div>
+    <h2 id="loaderTitle">Iniciando Sistema</h2>
+    <div class="message" id="message" data-current="">Conectando con base de datos...</div>
+    <div class="progress-container"><div class="progress-bar" id="progressBar">0%</div></div>
+    <button id="btnErrorLoader" class="btn-action btn-error" style="display:none;" onclick="volverDeError()">Cerrar y Revisar</button>
+    <button id="btnExitoLoader" class="btn-action" style="display:none; background: linear-gradient(135deg, #00f260, #0575e6);" onclick="volverDeExito()">Continuar</button>
+  </div>
+
+  <div class="card" id="vistaLogin">
+    <h2>Sistema de Control</h2>
+    <p style="color: #94a3b8; font-size: 13px; margin-bottom: 25px;">Identificación de Personal Autorizado</p>
+    
+    <div class="input-group">
+      <label>USUARIO</label>
+      <input type="text" list="listaNombres" id="loginNombre" placeholder="Buscar nombre..." autocomplete="off">
+      <datalist id="listaNombres"></datalist>
+    </div>
+    <div class="input-group">
+      <label>CONTRASEÑA</label>
+      <input type="password" id="loginPassword" placeholder="••••••••">
+    </div>
+
+    <button class="btn-action" onclick="iniciarSesion()">ACCEDER AL SISTEMA</button>
+    <span class="text-sm">¿No tienes cuenta? <span class="link" onclick="cambiarVista('vistaRegistro')">Solicitar Registro</span></span>
+  </div>
+
+  <div class="card" id="vistaRegistro">
+    <h2>Nuevo Personal</h2>
+    <p style="color: #94a3b8; font-size: 13px; margin-bottom: 20px;">Ingrese sus datos. El sistema validará su registro.</p>
+    
+    <div class="input-group">
+      <label>NOMBRE COMPLETO</label>
+      <input type="text" id="regNombre" placeholder="Nombres y Apellidos">
+    </div>
+    <div class="input-group">
+      <label>CÉDULA</label>
+      <input type="text" id="regCedula" placeholder="Número de documento">
+    </div>
+    <div class="input-group">
+      <label>CORREO ELECTRÓNICO</label>
+      <input type="email" id="regCorreo" placeholder="ejemplo@galias.com.co">
+    </div>
+    <div class="input-group">
+      <label>CARGO</label>
+      <input type="text" id="regCargo" placeholder="Ej. Maestro de Obra">
+    </div>
+    <div class="input-group">
+      <label>PROYECTO ASIGNADO</label>
+      <select id="regProyecto"></select>
+    </div>
+
+    <button class="btn-action" onclick="registrarUsuario()">ENVIAR SOLICITUD</button>
+    <button class="btn-action" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); box-shadow: none;" onclick="cambiarVista('vistaLogin')">Volver al Inicio</button>
+  </div>
+
+  <div class="card" id="vistaReasignar">
+    <h2 style="color: #f59e0b;">Cuenta Existente</h2>
+    <p style="color: #cbd5e1; font-size: 14px; margin-bottom: 20px; line-height: 1.5;">
+      Ya existe una cuenta en el sistema vinculada a ese número de documento. <br><br>
+      ¿Deseas solicitarle al administrador que te <b>reasigne una contraseña</b>?
+    </p>
+    
+    <div class="input-group">
+      <label>NUEVO CORREO ELECTRÓNICO (Opcional)</label>
+      <input type="email" id="reasignarCorreo" placeholder="Llenar solo si tu correo cambió">
+    </div>
+
+    <button class="btn-action btn-warning" onclick="enviarReasignacion()">SÍ, SOLICITAR CONTRASEÑA</button>
+    <button class="btn-action" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); box-shadow: none;" onclick="cambiarVista('vistaRegistro')">CANCELAR (ME EQUIVOQUÉ)</button>
+  </div>
+
+  <div class="card" id="vistaApp" style="max-width: 480px;">
+    <div id="badgeModulo" class="modulo-badge">OBRA</div>
+    
+    <h2>Módulo de Reporte</h2>
+    <div style="background: rgba(0,242,96,0.1); padding: 12px; border-radius: 10px; margin-bottom: 20px; text-align: left; border-left: 3px solid var(--primary);">
+        <span id="infoUsuarioNombre" style="font-size: 15px; font-weight: 700; color: white;">NOMBRE</span><br>
+        <span id="infoUsuarioCedula" style="font-size: 12px; color: #a0aec0; font-family: 'JetBrains Mono';">CC: 000000000</span><br>
+        <span id="infoUsuarioCorreo" style="font-size: 12px; color: #a0aec0; font-family: 'JetBrains Mono';">correo@empresa.com</span>
+    </div>
+    
+    <div class="input-group">
+      <label>PROYECTO ACTUAL</label>
+      <select id="appProyecto" onchange="actualizarFrentes()"></select>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div class="input-group">
+          <label>FRENTE</label>
+          <select id="appFrente"><option value="">Seleccione...</option></select>
+        </div>
+        <div class="input-group">
+          <label>UBICACIÓN</label>
+          <input type="text" id="appUbicacion" placeholder="Ej. Zanja Norte">
+        </div>
+    </div>
+
+    <div class="input-group">
+      <label>DESCRIPCIÓN / OBSERVACIONES</label>
+      <textarea id="appDescripcion" rows="3" placeholder="Detalles de la labor, novedades, observaciones..."></textarea>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+        <input type="file" id="inputFoto" accept="image/*" capture="environment">
+        <button class="btn-action btn-foto" onclick="document.getElementById('inputFoto').click()">📸 TOMAR FOTO</button>
+        
+        <input type="file" id="inputVideo" accept="video/*" capture="environment">
+        <button class="btn-action btn-video" onclick="document.getElementById('inputVideo').click()">🎥 GRABAR VIDEO</button>
+    </div>
+    <button id="btnGrabarAudio" class="btn-action">🎤 GRABAR AUDIO</button>
+    <div id="cronometro">00:00</div>
+
+    <div class="queue-container">
+        <label style="color:white; margin-bottom: 10px;">ARCHIVOS EN ESPERA (<span id="queueCount">0</span>)</label>
+        <div id="queueList" style="font-size: 13px; color: #94a3b8; font-style: italic;">No hay archivos pendientes.</div>
+        <button id="btnEnviarReporte" class="btn-action" style="margin-top: 20px; display: none;" onclick="enviarReporteEnCola()">🚀 CONFIRMAR Y ENVIAR</button>
+    </div>
+
+    <div style="margin-top: 25px; text-align: center;">
+        <span class="link text-sm" style="color: #ff6b6b; margin-top:0;" onclick="cerrarSesion()">Cerrar Sesión</span>
+    </div>
+  </div>
+
+  <div class="footer">Desarrollado por ⚡ Obras Manizales ⚡</div>
+
+  <script>
+    // =========================================================
+    // ⚠️ ¡IMPORTANTE! ACTUALIZA ESTA URL LUEGO DE DESPLEGAR TU SCRIPT ⚠️
+    // =========================================================
+    const URL_APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbxJW36iyRL1szzULJrj7iS4RSLaEr65gWnKSetnzwRkAH8vB-m-BC4cTzmtfQ763L8/exec';
+    // =========================================================
+    
+    let dbUsuarios = [];
+    let dbProyectos = {};
+    let usuarioActual = {};
+    let archivosQueue = [];
+    
+    let simuladorEnMarcha;
+    let ultimaVista = 'vistaLogin';
+    let cedulaParaReasignar = "";
+
+    window.addEventListener('DOMContentLoaded', async () => {
+        mostrarLoader("Iniciando Sistema");
+        try {
+            const response = await fetch(URL_APPS_SCRIPT, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'init' })
+            });
+            const result = await response.json();
+            
+            if (result.estado === 'exito') {
+                dbUsuarios = result.usuarios || [];
+                dbProyectos = result.proyectos || {};
+                
+                const datalist = document.getElementById('listaNombres');
+                dbUsuarios.forEach(u => {
+                    let option = document.createElement('option');
+                    option.value = u.nombre;
+                    datalist.appendChild(option);
+                });
+
+                const selProyReg = document.getElementById('regProyecto');
+                Object.keys(dbProyectos).forEach(p => {
+                    let opt1 = document.createElement('option'); opt1.value = p; opt1.text = p;
+                    selProyReg.appendChild(opt1);
+                });
+
+                clearInterval(simuladorEnMarcha);
+                document.getElementById("vistaLoader").classList.remove("is-processing");
+                cambiarVista('vistaLogin');
+            } else {
+                errorLoader("No se pudo cargar la base de datos.");
+            }
+        } catch (e) {
+            errorLoader("Fallo de conexión al servidor.");
+        }
+    });
+
+    async function iniciarSesion() {
+      const nombre = document.getElementById('loginNombre').value.trim().toUpperCase();
+      const password = document.getElementById('loginPassword').value.trim();
+      if(!nombre || !password) return alert("Por favor ingresa Usuario (Nombre) y Contraseña.");
+      
+      mostrarLoader("Autenticando Usuario");
+      try {
+        const r = await fetch(URL_APPS_SCRIPT, { 
+            method: 'POST', 
+            body: JSON.stringify({ action: 'login', nombre: nombre, password: password }) 
+        });
+        const res = await r.json();
+        
+        if(res.estado === 'exito') {
+          usuarioActual = res;
+          document.getElementById('infoUsuarioNombre').innerText = res.nombre;
+          document.getElementById('infoUsuarioCedula').innerText = `CC: ${res.cedula}`;
+          document.getElementById('infoUsuarioCorreo').innerText = res.correo;
+
+          const selectProyecto = document.getElementById('appProyecto');
+          selectProyecto.innerHTML = ''; 
+          
+          Object.keys(dbProyectos).forEach(p => {
+              if (p.toUpperCase() === 'PERSONAL DISPERSO - OBRAS MANIZALES' && res.proyecto.toUpperCase() !== 'PERSONAL DISPERSO - OBRAS MANIZALES') {
+                  return; 
+              }
+              let opt = document.createElement('option'); 
+              opt.value = p; 
+              opt.text = p;
+              selectProyecto.appendChild(opt);
+          });
+          
+          selectProyecto.value = res.proyecto;
+          actualizarFrentes();
+
+          const badge = document.getElementById('badgeModulo');
+          badge.style.display = 'block';
+          if (res.modulo === 'SST') {
+              badge.innerText = '🛡️ SST';
+              badge.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+          } else {
+              badge.innerText = '🏗️ OBRA';
+              badge.style.background = 'linear-gradient(135deg, #0575e6, #021b79)';
+          }
+
+          document.getElementById('loginPassword').value = ''; 
+          exitoLoader(`Bienvenido al sistema,<br><b style="color:white;">${res.nombre}</b>`, 'vistaApp');
+        } else errorLoader(res.mensaje);
+      } catch (e) { errorLoader("Error de conexión al servidor central."); }
+    }
+
+    function actualizarFrentes() {
+        const proyectoElegido = document.getElementById('appProyecto').value;
+        const frentesDropdown = document.getElementById('appFrente');
+        frentesDropdown.innerHTML = '<option value="">Seleccione...</option>';
+        
+        const infoProy = dbProyectos[proyectoElegido];
+        if(infoProy && infoProy.frentes) {
+            infoProy.frentes.forEach(f => {
+                let opt = document.createElement('option');
+                opt.value = f; opt.text = f;
+                frentesDropdown.appendChild(opt);
+            });
+        }
+    }
+
+    function validarCorreoRegex(correo) {
+        const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        return regex.test(correo);
+    }
+
+    async function registrarUsuario() {
+        const cedula = document.getElementById('regCedula').value.trim().toUpperCase();
+        const nombre = document.getElementById('regNombre').value.trim().toUpperCase();
+        const correo = document.getElementById('regCorreo').value.trim().toUpperCase();
+        const cargo = document.getElementById('regCargo').value.trim().toUpperCase();
+        const proyecto = document.getElementById('regProyecto').value;
+        
+        if(!cedula || !nombre) return alert("Cédula y Nombre son obligatorios.");
+        if (!validarCorreoRegex(correo)) return alert("⚠️ Por favor, ingrese un correo electrónico válido.");
+
+        mostrarLoader("Verificando Datos");
+        try {
+            const r = await fetch(URL_APPS_SCRIPT, { method: 'POST', body: JSON.stringify({ action: 'register', cedula, nombre, correo, cargo, proyecto }) });
+            const res = await r.json();
+            
+            if(res.estado === 'exito') {
+                document.getElementById('regCedula').value = ''; document.getElementById('regNombre').value = '';
+                document.getElementById('regCorreo').value = ''; document.getElementById('regCargo').value = '';
+                exitoLoader(`Solicitud enviada a Administración.`, 'vistaLogin');
+            } 
+            else if (res.estado === 'duplicado') {
+                cedulaParaReasignar = cedula; 
+                clearInterval(simuladorEnMarcha); 
+                document.getElementById("vistaLoader").classList.remove("is-processing"); 
+                cambiarVista('vistaReasignar');
+            }
+            else {
+                errorLoader(res.mensaje);
+            }
+        } catch (e) { errorLoader("Error de conexión."); }
+    }
+
+    async function enviarReasignacion() {
+        const nuevoCorreo = document.getElementById('reasignarCorreo').value.trim().toUpperCase();
+        
+        if (nuevoCorreo !== "" && !validarCorreoRegex(nuevoCorreo)) {
+            return alert("⚠️ Por favor, ingrese un correo electrónico válido.");
+        }
+
+        mostrarLoader("Enviando Solicitud");
+        try {
+            const r = await fetch(URL_APPS_SCRIPT, { 
+                method: 'POST', 
+                body: JSON.stringify({ action: 'reasignar', cedula: cedulaParaReasignar, nuevoCorreo: nuevoCorreo }) 
+            });
+            const res = await r.json();
+            
+            if(res.estado === 'exito') {
+                document.getElementById('reasignarCorreo').value = '';
+                cedulaParaReasignar = "";
+                document.getElementById('regCedula').value = ''; document.getElementById('regNombre').value = '';
+                document.getElementById('regCorreo').value = ''; document.getElementById('regCargo').value = '';
+                exitoLoader(`El Administrador ha sido notificado para reasignar su contraseña.`, 'vistaLogin');
+            } else {
+                errorLoader(res.mensaje);
+            }
+        } catch (e) { errorLoader("Error de conexión."); }
+    }
+
+    function cerrarSesion() {
+        usuarioActual = {};
+        archivosQueue = [];
+        actualizarUICola();
+        document.getElementById('appUbicacion').value = '';
+        document.getElementById('appDescripcion').value = '';
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('badgeModulo').style.display = 'none';
+        cambiarVista('vistaLogin');
+    }
+
+    let mediaRecorder; let audioChunks = []; let isRecording = false; let intervaloCronometro; let segundos = 0;
+    const btnGrabarAudio = document.getElementById('btnGrabarAudio'); 
+    const cronometro = document.getElementById('cronometro'); 
+
+    btnGrabarAudio.addEventListener('click', async () => {
+      if (!isRecording) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          mediaRecorder = new MediaRecorder(stream);
+          audioChunks = [];
+          mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+          mediaRecorder.onstop = () => {
+              const audioBlob = new Blob(audioChunks, { type: 'audio/mp4' });
+              agregarACola(audioBlob, 'Audio', 'mp4');
+          };
+          mediaRecorder.start();
+          isRecording = true;
+          
+          btnGrabarAudio.classList.add('btn-audio-grabando');
+          btnGrabarAudio.innerHTML = "⏹️ DETENER AUDIO";
+          cronometro.style.display = 'block'; segundos = 0; cronometro.innerText = "00:00";
+          intervaloCronometro = setInterval(() => {
+            segundos++;
+            cronometro.innerText = `${Math.floor(segundos/60).toString().padStart(2,'0')}:${(segundos%60).toString().padStart(2,'0')}`;
+          }, 1000);
+        } catch (error) { alert("Permiso de micrófono denegado."); }
+      } else {
+        mediaRecorder.stop();
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        isRecording = false;
+        btnGrabarAudio.classList.remove('btn-audio-grabando');
+        btnGrabarAudio.innerHTML = "🎤 GRABAR AUDIO";
+        clearInterval(intervaloCronometro); cronometro.style.display = 'none';
+      }
+    });
+
+    document.getElementById('inputFoto').addEventListener('change', e => procesarArchivoLocal(e, 'Foto'));
+    document.getElementById('inputVideo').addEventListener('change', e => procesarArchivoLocal(e, 'Video'));
+
+    function procesarArchivoLocal(e, tipo) {
+      const archivo = e.target.files[0];
+      if (!archivo) return;
+      if (archivo.size > 40 * 1024 * 1024) { alert(`Archivo muy pesado (Máx 40MB).`); e.target.value = ""; return; }
+      
+      let extension = archivo.name.split('.').pop().toLowerCase();
+      if(tipo === 'Video') extension = 'mp4'; 
+      
+      agregarACola(archivo, tipo, extension);
+      e.target.value = "";
+    }
+
+    function agregarACola(blob, tipo, extension) {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = function() {
+          archivosQueue.push({ base64: reader.result, tipo: tipo, extension: extension });
+          actualizarUICola();
+      }
+    }
+
+    function removerDeCola(index) {
+        archivosQueue.splice(index, 1);
+        actualizarUICola();
+    }
+
+    function actualizarUICola() {
+        const queueList = document.getElementById('queueList');
+        const countSpan = document.getElementById('queueCount');
+        countSpan.innerText = archivosQueue.length;
+        
+        if(archivosQueue.length === 0) {
+            queueList.innerHTML = "No hay archivos pendientes.";
+            document.getElementById('btnEnviarReporte').style.display = 'none';
+            return;
+        }
+
+        document.getElementById('btnEnviarReporte').style.display = 'block';
+        queueList.innerHTML = "";
+        
+        archivosQueue.forEach((item, index) => {
+            let div = document.createElement('div');
+            div.className = `queue-item ${item.tipo.toLowerCase()}`;
+            let icon = item.tipo === 'Foto' ? '📸' : (item.tipo === 'Video' ? '🎥' : '🎤');
+            div.innerHTML = `<span>${icon} Archivo de ${item.tipo} ${index + 1}</span> <button class="btn-remove" onclick="removerDeCola(${index})">×</button>`;
+            queueList.appendChild(div);
+        });
+    }
+
+    function obtenerFechaFormateada() {
+        const d = new Date();
+        const p = (n) => n.toString().padStart(2, '0');
+        return `${p(d.getDate())}-${p(d.getMonth()+1)}-${d.getFullYear()}_${p(d.getHours())}-${p(d.getMinutes())}-${p(d.getSeconds())}`;
+    }
+
+    async function enviarReporteEnCola() {
+        if (isRecording) {
+            alert("⚠️ Hay un audio grabándose. Por favor detén la grabación antes de enviar el reporte.");
+            return;
+        }
+
+        const proyectoElegido = document.getElementById('appProyecto').value;
+        const frente = document.getElementById('appFrente').value.trim().toUpperCase();
+        const ubicacion = document.getElementById('appUbicacion').value.trim().toUpperCase();
+        const descripcion = document.getElementById('appDescripcion').value.trim();
+        
+        if(!proyectoElegido) return alert("⚠️ Seleccione un PROYECTO.");
+        if(!frente) return alert("⚠️ Debe seleccionar un FRENTE.");
+        if(!ubicacion) return alert("⚠️ Debe ingresar una UBICACIÓN.");
+        if(archivosQueue.length === 0) return alert("Agregue al menos un archivo.");
+
+        const infoProy = dbProyectos[proyectoElegido];
+        const sigla = infoProy ? infoProy.sigla : "S-S";
+        const fecha = obtenerFechaFormateada();
+        const modulo = usuarioActual.modulo || "OBRA";
+
+        mostrarLoader("Subiendo Archivos...");
+        let errores = 0;
+        let ultimoErrorTxt = ""; 
+        let contadoresTipo = { 'Foto': 0, 'Video': 0, 'Audio': 0 };
+        let linksDeArchivos = []; 
+
+        for(let i=0; i<archivosQueue.length; i++) {
+            let item = archivosQueue[i];
+            let msg = `Subiendo archivo ${i+1} de ${archivosQueue.length}...`;
+            actualizarUI({ progreso: Math.floor(((i)/archivosQueue.length)*100), mensaje: msg });
+
+            contadoresTipo[item.tipo]++;
+            let nombreFinal = `${sigla}-${frente}-${ubicacion}-${fecha}_${modulo}_${item.tipo.toUpperCase()}${contadoresTipo[item.tipo]}.${item.extension}`;
+
+            try {
+                const r = await fetch(URL_APPS_SCRIPT, { method: 'POST', body: JSON.stringify({ action: 'upload', base64: item.base64, nombre: nombreFinal }) });
+                const res = await r.json();
+                
+                if(res.estado !== 'exito') {
+                    errores++;
+                    ultimoErrorTxt = res.mensaje || "Error desconocido devuelto por el servidor.";
+                } else {
+                    linksDeArchivos.push({ tipo: item.tipo, url: res.url });
+                }
+            } catch (e) { 
+                errores++; 
+                ultimoErrorTxt = e.message || e.toString();
+            }
+        }
+
+        if(errores === 0) {
+            let resumenText = `Se cargaron: ${contadoresTipo['Foto']} Fotos, ${contadoresTipo['Video']} Videos, ${contadoresTipo['Audio']} Audios.`;
+            
+            // ENVÍO DE TRAZABILIDAD AGRUPADA
+            try {
+                const payloadTrazabilidad = {
+                    action: 'trazabilidad',
+                    usuario: usuarioActual.nombre,
+                    cedula: usuarioActual.cedula,
+                    proyecto: proyectoElegido,
+                    frente: frente,
+                    ubicacion: ubicacion,
+                    modulo: modulo,
+                    resumen: resumenText,
+                    descripcion: descripcion
+                };
+                await fetch(URL_APPS_SCRIPT, { method: 'POST', body: JSON.stringify(payloadTrazabilidad) });
+            } catch (e) { console.log("Fallo trazabilidad, pero archivos subidos"); }
+
+            let wsText = `*--- REPORTE DE OBRA - ${modulo} ---*\n`;
+            wsText += `*Registra:* ${usuarioActual.nombre}\n`;
+            wsText += `*Proyecto:* ${proyectoElegido}\n`;
+            wsText += `*Ubicacion:* ${frente} - ${ubicacion}\n\n`;
+            
+            if (descripcion !== "") {
+                wsText += `*Descripcion:*\n_${descripcion}_\n\n`;
+            }
+            
+            wsText += `*ARCHIVOS ADJUNTOS (${linksDeArchivos.length}):*\n`;
+            linksDeArchivos.forEach((file, index) => {
+                wsText += `- Archivo ${file.tipo} ${index + 1}: ${file.url}\n`;
+            });
+
+            let linkWa = `https://wa.me/?text=${encodeURIComponent(wsText)}`;
+            let btnWhatsAppHTML = `<br><br><a href="${linkWa}" target="_blank" style="text-decoration:none;"><button class="btn-action btn-whatsapp" style="margin-top:0;">💬 COMPARTIR EN WHATSAPP</button></a>`;
+
+            archivosQueue = [];
+            actualizarUICola();
+            document.getElementById('appUbicacion').value = '';
+            document.getElementById('appDescripcion').value = '';
+            
+            exitoLoader(`Reporte completado.<br><span style="font-size:12px;color:gray;">Archivos subidos exitosamente.</span>${btnWhatsAppHTML}`, 'vistaApp');
+        } else {
+            errorLoader(`Fallo en ${errores} archivo(s).<br><span style="font-size:11px;color:#ffb3b3;margin-top:10px;display:block;">Detalle: ${ultimoErrorTxt}</span>`);
+        }
+    }
+
+    function cambiarVista(idVista) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      document.getElementById(idVista).classList.add('active');
+    }
+    
+    function resetBtnError() {
+      const btn = document.getElementById("btnErrorLoader");
+      btn.className = "btn-action btn-error"; 
+      btn.style.background = ""; 
+      btn.innerHTML = "Cerrar y Revisar";
+    }
+
+    function mostrarLoader(titulo) {
+      ultimaVista = document.querySelector('.card.active') ? document.querySelector('.card.active').id : 'vistaLogin';
+      cambiarVista('vistaLoader');
+      document.getElementById("vistaLoader").classList.add("is-processing");
+      document.getElementById("btnErrorLoader").style.display = "none";
+      document.getElementById("btnExitoLoader").style.display = "none";
+      document.getElementById("loaderTitle").innerText = titulo;
+      document.getElementById("loaderTitle").style.color = "white";
+      let p = 2; actualizarUI({ progreso: p, mensaje: "Estableciendo conexión segura..." });
+      simuladorEnMarcha = setInterval(() => {
+        if (p < 85) { p += Math.floor(Math.random()*8)+2; if(p>85) p=85; actualizarUI({ progreso: p, mensaje: "Procesando datos cifrados..." }); }
+      }, 800);
+    }
+
+    function exitoLoader(html, sigVista) {
+      clearInterval(simuladorEnMarcha); 
+      actualizarUI({ progreso: 100, mensaje: "Completado." });
+      setTimeout(() => {
+        document.getElementById("vistaLoader").classList.remove("is-processing"); 
+        const t = document.getElementById("loaderTitle"); t.innerHTML = "¡Éxito! ✓"; t.style.color = "#00f260";
+        document.getElementById("progressBar").style.background = "#00f260";
+        const m = document.getElementById("message"); clearInterval(m.scrambleInterval); m.style.color = "#00f260"; m.innerHTML = html;
+        const b = document.getElementById("btnExitoLoader"); b.style.display = "flex"; b.onclick = () => cambiarVista(sigVista);
+      }, 500);
+    }
+
+    function errorLoader(msgError) {
+      clearInterval(simuladorEnMarcha); document.getElementById("vistaLoader").classList.remove("is-processing"); 
+      const t = document.getElementById("loaderTitle"); t.innerHTML = "Fallo del Sistema ⚠️"; t.style.color = "#ff6b6b";
+      document.getElementById("progressBar").style.background = "#ff416c"; document.getElementById("progressBar").innerHTML = "Error";
+      const m = document.getElementById("message"); clearInterval(m.scrambleInterval); m.style.color = "#ff8787"; m.innerHTML = `<b>${msgError}</b>`;
+      resetBtnError();
+      document.getElementById("btnErrorLoader").style.display = "flex";
+    }
+
+    function volverDeError() { 
+        document.getElementById("message").style.color = "#00f260"; 
+        document.getElementById("loginPassword").value = '';
+        resetBtnError();
+        cambiarVista('vistaLogin'); 
+    }
+
+    function textScramble(e, t) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*<>{}\\[]'; let i = 0; clearInterval(e.scrambleInterval); 
+      e.scrambleInterval = setInterval(() => {
+        e.innerText = t.split('').map((l, x) => x < i ? l : chars[Math.floor(Math.random()*chars.length)]).join('');
+        if (i >= t.length) clearInterval(e.scrambleInterval); i += 0.5; 
+      }, 20);
+    }
+
+    function actualizarUI(d) { 
+        document.getElementById("progressBar").style.width = d.progreso+"%"; 
+        document.getElementById("progressBar").innerHTML = d.progreso+"%"; 
+        if(document.getElementById("message").dataset.current !== d.mensaje) { 
+            document.getElementById("message").dataset.current = d.mensaje; 
+            textScramble(document.getElementById("message"), d.mensaje); 
+        } 
+    }
+  </script>
+</body>
+</html>
